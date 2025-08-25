@@ -2,10 +2,10 @@
 
 ## Required
 - `SITE_URL` = `https://tau100.netlify.app`
-- `SITE_ID` = `<copy from Netlify → Site settings → Site details → Site ID>`
+- `SITE_ID` = 4a380a79-5b63-4089-abb1-02b16dc792c9
 - `STRIPE_SECRET_KEY` = `sk_test_...` (use test first, then live)
 - `STRIPE_WEBHOOK_SECRET` = `whsec_...` (from Stripe for the endpoint below)
-- `ADMIN_KEY` = `<choose a passcode>`
+- `ADMIN_KEY` = In5nite1914!
 
 ## Optional (Email confirmations)
 - `POSTMARK_TOKEN` = `<Postmark server token>`
