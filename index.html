@@ -365,6 +365,13 @@
     refreshBtn.addEventListener('click', loadRoster);
     loadRoster();
 
+<!-- Honeypot (spam trap) -->
+<div class="hidden" style="display:none !important;">
+  <label>Website</label>
+  <input name="website" tabindex="-1" autocomplete="off" />
+</div>
+
+    
     // Memory Wall
     async function uploadMemoryPhotoIfAny(file) { if (!file) return { url: '' }; const fd = new FormData(); fd.append('file', file); const resp = await fetch('/.netlify/functions/upload_photo', { method: 'POST', body: fd }); if (!resp.ok) throw new Error('Photo upload failed'); return resp.json(); }
     const memoryForm = document.getElementById('memoryForm'); const memoryMsg = document.getElementById('memoryMsg'); const memoryList = document.getElementById('memoryList');
