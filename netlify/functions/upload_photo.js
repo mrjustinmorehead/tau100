@@ -1,1 +1,1 @@
-exports.handler = async () => ({ statusCode: 501, body: 'upload_photo not configured in this pack' });
+export const handler = async () => ({ statusCode: 501, body: 'Photo upload not configured in this pack.' });

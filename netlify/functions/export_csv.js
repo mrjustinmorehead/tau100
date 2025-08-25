@@ -1,46 +1,30 @@
-// /netlify/functions/export_csv.js
-const { NetlifyBlob } = require('@netlify/blobs');
-
-exports.handler = async (event) => {
-  if (event.headers['x-admin-key'] !== process.env.ADMIN_KEY) return { statusCode: 401, body: 'Unauthorized' };
+import { NetlifyBlob } from '@netlify/blobs';
+export const handler = async (event) => {
   try {
+    const admin = event.headers['x-admin-key'] || '';
+    if (!process.env.ADMIN_KEY || admin !== process.env.ADMIN_KEY) return { statusCode: 401, body: 'Unauthorized' };
     const store = new NetlifyBlob({ siteID: process.env.SITE_ID });
     const list = await store.list({ prefix: 'registrants/' });
-    const generatedAt = new Date().toISOString();
-
-    const rows = [];
-    rows.push(['Generated At', generatedAt]);
-    rows.push([]);
-    rows.push(['Name','Email','Phone','Year Joined','T-Shirt Size','Photo URL','Opt-In Public','Created At']);
-
-    for (const item of list) {
-      try {
-        const text = await store.get(item.key, { type: 'text' });
-        const r = JSON.parse(text);
-        rows.push([
-          r.name || '',
-          r.email || '',
-          r.phone || '',
-          r.yearJoined || '',
-          r.tshirtSize || '',
-          r.photoUrl || '',
-          r.optInPublic ? 'Yes' : 'No',
-          r.createdAt || ''
-        ]);
-      } catch (e) {}
+    const items = list?.objects || [];
+    let rows = [];
+    for (const obj of items) {
+      const text = await store.get(obj.key).then(r => r.text());
+      const j = JSON.parse(text);
+      rows.push(j);
     }
-
-    const csv = rows.map(row => row.map(v => `"${String(v||'').replace(/"/g,'""')}"`).join(',')).join('\n');
-    return {
-      statusCode: 200,
-      headers: {
-        'Content-Type': 'text/csv',
-        'Content-Disposition': `attachment; filename="registrants_${generatedAt.replace(/[:]/g,'-')}.csv"`
-      },
-      body: csv
-    };
-  } catch (e) {
-    console.error(e);
-    return { statusCode: 500, body: 'Export error' };
-  }
+    rows.sort((a,b) => new Date(a.createdAt) - new Date(b.createdAt));
+    const header = ['Name','Email','Phone','YearJoined','TShirtSize','PhotoUrl','OptInPublic','CreatedAt'];
+    const out = ['Generated At,' + new Date().toISOString(), header.join(',')]
+      .concat(rows.map(r => [
+        (r.name||'').replace(/,/g,' '),
+        (r.email||''),
+        (r.phone||'').replace(/,/g,' '),
+        r.yearJoined||'',
+        r.tshirtSize||'',
+        r.photoUrl||'',
+        r.optInPublic ? 'TRUE':'FALSE',
+        r.createdAt||''
+      ].join(','))).join('\n');
+    return { statusCode: 200, headers: { 'Content-Type': 'text/csv', 'Content-Disposition': `attachment; filename="registrants_${new Date().toISOString().replace(/[:]/g,'-')}.csv"` }, body: out };
+  } catch (e) { console.error(e); return { statusCode: 500, body: 'CSV error' }; }
 };
