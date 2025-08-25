@@ -1,4 +1,3 @@
-// /netlify/functions/list_memories.js
 const { NetlifyBlob } = require('@netlify/blobs');
 exports.handler = async () => {
   const store = new NetlifyBlob({ siteID: process.env.SITE_ID });

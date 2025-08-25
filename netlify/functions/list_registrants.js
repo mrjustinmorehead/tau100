@@ -1,6 +1,4 @@
-// /netlify/functions/list_registrants.js
 const { NetlifyBlob } = require('@netlify/blobs');
-
 exports.handler = async () => {
   try {
     const store = new NetlifyBlob({ siteID: process.env.SITE_ID });

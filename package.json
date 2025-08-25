@@ -2,7 +2,6 @@
   "name": "tau-centennial-site",
   "version": "1.0.0",
   "private": true,
-  "license": "MIT",
   "dependencies": {
     "stripe": "^16.0.0",
     "@netlify/blobs": "^6.4.0",
