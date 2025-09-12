@@ -1,9 +1,9 @@
 {
-  "name": "tau-centennial",
-  "private": true,
+  "name": "tau-centennial-manual-gate",
   "version": "1.0.0",
+  "private": true,
+  "license": "MIT",
   "dependencies": {
-    "@netlify/blobs": "^6.4.0",
     "node-fetch": "^3.3.2"
   }
 }

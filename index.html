@@ -1,362 +1,451 @@
 <!doctype html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Tau Chapter Centennial Homecoming</title>
 
-  <meta name="description" content="Tau Chapter Centennial Homecoming — register, pay, and join the celebration." />
+  <meta name="description" content="Register for the Tau Chapter Centennial Homecoming. Choose a sponsorship level, pay, and confirm." />
   <meta property="og:title" content="Tau Chapter Centennial Homecoming" />
-  <meta property="og:description" content="Celebrate 100 Years. Register today." />
+  <meta property="og:description" content="Celebrate 100 years — Brotherhood • Scholarship • Service" />
   <meta property="og:image" content="assets/tau100-4.jpg" />
   <meta name="twitter:card" content="summary_large_image" />
 
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet" />
   <style>
-    body { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
-    :root { --pbs-royal:#19468D; --pbs-royal-dark:#13386a; --sigma-gray:#BCBEBE; --sigma-black:#1F1E1E; }
-    :focus-visible{outline:3px solid var(--pbs-royal);outline-offset:2px}
+    :root { --pbs-royal:#19468D; --pbs-royal-dark:#13386a; --sigma-gray:#BCBEBE; }
+    html:has([data-theme='dark']) body, body.dark { background:#0b1220; color:#e6edf3; }
+    .card { border-radius:1rem; box-shadow:0 8px 24px rgba(0,0,0,0.08); }
+    .focus-ring:focus-visible { outline:2px solid #19468D; outline-offset:2px; }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-900">
+  <!-- Sticky mobile action bar -->
+  <div class="fixed bottom-0 inset-x-0 z-40 md:hidden">
+    <div class="mx-auto max-w-md">
+      <div class="m-3 p-2 rounded-xl bg-white shadow-lg border border-[var(--sigma-gray)] flex gap-2">
+        <a href="#register" class="flex-1 text-center px-4 py-3 rounded-lg bg-[var(--pbs-royal)] text-white font-semibold">Register</a>
+        <a href="https://cash.app/$UofLSigmas" target="_blank" class="flex-1 text-center px-4 py-3 rounded-lg bg-white border font-semibold">Donate</a>
+      </div>
+    </div>
+  </div>
 
   <!-- HERO -->
-  <header class="relative overflow-hidden">
-    <div class="absolute inset-0 opacity-10">
-      <img src="assets/PBS%20100.jpg" loading="lazy" width="1200" height="630" class="w-full h-full object-cover" alt="Centennial Collage" />
-    </div>
-    <div class="relative max-w-6xl mx-auto px-4 py-16">
-      <div class="flex items-center gap-4">
-        <img src="assets/Tau 1925.jpg" loading="lazy" width="128" height="128" alt="Tau 1925" class="w-16 h-16 object-cover rounded-full ring-2 ring-white shadow" />
+  <header class="relative">
+    <div class="relative max-w-6xl mx-auto px-4 py-12 sm:py-16">
+      <div class="flex items-center justify-between gap-4">
         <div>
           <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight">Tau Chapter Centennial Homecoming</h1>
-          <p class="text-lg sm:text-xl mt-2 font-medium">Celebrating 100 Years • 1925–2025 · <span id="heroTaglineRotator" class="font-semibold">Brotherhood</span></p>
+          <p class="text-lg sm:text-xl mt-2 font-medium">Celebrating 100 Years • 1925–2025</p>
+          <p id="marquee" class="mt-2 text-[var(--pbs-royal)] font-semibold">Brotherhood</p>
         </div>
+        <button id="darkToggle" class="hidden sm:inline-flex px-3 py-2 rounded-lg border bg-white focus-ring" aria-label="Toggle dark mode">🌙</button>
       </div>
-      <p class="mt-6 max-w-3xl text-slate-700">Join brothers, family, and friends for a historic weekend of fellowship, history, and celebration.</p>
       <div class="mt-6 flex flex-wrap items-center gap-3">
-        <a href="#register" class="px-5 py-3 bg-[var(--pbs-royal)] hover:bg-[var(--pbs-royal-dark)] text-white rounded-xl shadow font-semibold">Register & Pay $100</a>
+        <a href="#register" class="px-5 py-3 bg-[var(--pbs-royal)] hover:bg-[var(--pbs-royal-dark)] text-white rounded-xl shadow font-semibold">Register</a>
         <a href="#schedule" class="px-5 py-3 bg-white text-slate-900 rounded-xl shadow border border-[var(--sigma-gray)] font-semibold">See Schedule</a>
-        <a href="https://cash.app/$UofLSigmas/" target="_blank" rel="noopener" class="px-5 py-3 bg-white text-slate-900 rounded-xl shadow border border-[var(--sigma-gray)] font-semibold" aria-label="Donate via Cash App">Donate</a>
+        <a href="https://cash.app/$UofLSigmas/" target="_blank" class="px-5 py-3 bg-white text-slate-900 rounded-xl shadow border border-[var(--sigma-gray)] font-semibold">Donate</a>
       </div>
-      <button id="darkToggle" class="mt-4 px-3 py-2 rounded-lg border border-[var(--sigma-gray)] bg-white text-sm" aria-label="Toggle dark mode">Dark mode</button>
     </div>
   </header>
 
   <!-- 100 Years of Tau -->
   <section id="timeline" class="max-w-6xl mx-auto px-4 py-12">
-    <h2 class="text-2xl sm:text-3xl font-extrabold relative pb-2 after:content-[''] after:absolute after:left-0 after:-bottom-1 after:w-24 after:h-1 after:bg-[var(--pbs-royal)]">100 Years of Tau Chapter</h2>
+    <h2 class="text-2xl sm:text-3xl font-extrabold">100 Years of Tau Chapter</h2>
     <div class="mt-6 grid md:grid-cols-3 gap-6">
-      <figure class="bg-white rounded-2xl shadow p-6 ring-1 ring-[var(--sigma-gray)]">
-        <img src="assets/tau100-1.jpg" loading="lazy" width="800" height="450" alt="Brotherhood" class="rounded-xl object-cover w-full h-48" />
-        <figcaption class="mt-3 text-sm text-slate-600"><strong>Brotherhood</strong> — A bond unlike any other.</figcaption>
+      <figure class="card bg-white rounded-2xl p-6 ring-1 ring-[var(--sigma-gray)]">
+        <img src="assets/tau100-1.jpg" loading="lazy" alt="Brotherhood" class="rounded-xl w-full h-48 object-cover" width="640" height="384" />
+        <figcaption class="mt-3 text-sm text-slate-700"><strong>Brotherhood</strong> — A bond unlike any other.</figcaption>
       </figure>
-      <figure class="bg-white rounded-2xl shadow p-6 ring-1 ring-[var(--sigma-gray)]">
-        <img src="assets/tau100-3.jpg" loading="lazy" width="800" height="450" alt="Scholarship" class="rounded-xl object-cover w-full h-48" />
-        <figcaption class="mt-3 text-sm text-slate-600"><strong>Scholarship</strong> — A century of academic success.</figcaption>
+      <figure class="card bg-white rounded-2xl p-6 ring-1 ring-[var(--sigma-gray)]">
+        <img src="assets/tau100-3.jpg" loading="lazy" alt="Scholarship" class="rounded-xl w-full h-48 object-cover" width="640" height="384" />
+        <figcaption class="mt-3 text-sm text-slate-700"><strong>Scholarship</strong> — A century of academic success.</figcaption>
       </figure>
-      <figure class="bg-white rounded-2xl shadow p-6 ring-1 ring-[var(--sigma-gray)]">
-        <img src="assets/charter members.jpg" loading="lazy" width="800" height="450" alt="Service" class="rounded-xl object-cover w-full h-48" />
-        <figcaption class="mt-3 text-sm text-slate-600"><strong>Service</strong> — Committed to servicing Louisville since 1925.</figcaption>
+      <figure class="card bg-white rounded-2xl p-6 ring-1 ring-[var(--sigma-gray)]">
+        <img src="assets/charter members.jpg" loading="lazy" alt="Service" class="rounded-xl w-full h-48 object-cover" width="640" height="384" />
+        <figcaption class="mt-3 text-sm text-slate-700"><strong>Service</strong> — Committed to servicing Louisville since 1925.</figcaption>
       </figure>
     </div>
   </section>
 
   <!-- SCHEDULE -->
   <section id="schedule" class="max-w-6xl mx-auto px-4 py-12">
-    <h2 class="text-2xl sm:text-3xl font-extrabold relative pb-2 after:content-[''] after:absolute after:left-0 after:-bottom-1 after:w-24 after:h-1 after:bg-[var(--pbs-royal)]">Weekend Schedule</h2>
-    <p class="text-slate-600 mt-2">Times/locations subject to minor adjustments; check back for updates.</p>
-
+    <h2 class="text-2xl sm:text-3xl font-extrabold">Weekend Schedule</h2>
     <div class="mt-6 grid md:grid-cols-3 gap-6">
-      <!-- Friday Social Gathering -->
-      <div class="bg-white rounded-2xl shadow p-6 ring-1 ring-[var(--sigma-gray)]">
+      <!-- Friday Social -->
+      <div class="card bg-white rounded-2xl p-6 ring-1 ring-[var(--sigma-gray)]">
         <h3 class="text-xl font-bold">Friday • Social Gathering</h3>
-        <p class="mt-2 text-slate-600">Evening mixer to kick off the weekend. Connect with brothers across generations.</p>
         <ul class="mt-3 text-sm text-slate-700 list-disc list-inside">
-          <li>Time: Friday 5:00–6:30 PM</li>
-          <li>Venue: TBA (near Brown Theater). We'll enter the Stepshow together.</li>
+          <li>Time: 5:00–6:30 PM (near Brown Theater, TBA)</li>
+          <li>We’ll enter the Stepshow together</li>
         </ul>
         <div class="mt-2 text-sm">
-          <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Tau%20Centennial%20Friday%20Social&dates=20250919T220000Z/20250919T233000Z&details=Social%20gathering%20near%20Brown%20Theater%20(enter%20Stepshow%20together)&location=Near%20Brown%20Theater%2C%20Louisville%2C%20KY"
-             target="_blank" class="underline text-[var(--pbs-royal)]" aria-label="Add Friday Social to Google Calendar">
-             Add to Google Calendar (Social)
-          </a>
+          <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Tau%20Chapter%20Social%20Gathering&dates=20250919T220000Z/20250919T233000Z&details=Meet%20near%20Brown%20Theater%2C%20enter%20Stepshow%20together&location=Brown%20Theater%20area"
+             target="_blank" class="underline text-[var(--pbs-royal)]">Add to Google Calendar</a>
         </div>
       </div>
 
       <!-- Friday Stepshow -->
-      <div class="bg-white rounded-2xl shadow p-6 ring-1 ring-[var(--sigma-gray)]">
+      <div class="card bg-white rounded-2xl p-6 ring-1 ring-[var(--sigma-gray)]">
         <h3 class="text-xl font-bold">Friday Night • Homecoming Stepshow</h3>
-        <img src="assets/tau100-4.jpg" loading="lazy" width="800" height="450" alt="Stepshow" class="w-full h-48 object-cover rounded-xl mb-3" />
-        <p class="mt-2 text-slate-600">Celebrate excellence and tradition at the official Stepshow.</p>
+        <img src="assets/tau100-4.jpg" loading="lazy" alt="Stepshow" class="rounded-xl w-full h-40 object-cover mt-2" width="640" height="320" />
         <ul class="mt-3 text-sm text-slate-700 list-disc list-inside">
-          <li>Time: Friday 7:00 PM</li>
+          <li>Time: 7:00 PM</li>
           <li>Venue: Brown Theater (Kentucky Performing Arts)</li>
         </ul>
         <div class="mt-2 text-sm">
           <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Tau%20Chapter%20Homecoming%20Stepshow&dates=20250919T230000Z/20250920T010000Z&details=Official%20stepshow%20at%20Brown%20Theater&location=Brown%20Theater%2C%20315%20W%20Broadway%2C%20Louisville%2C%20KY"
-             target="_blank" class="underline text-[var(--pbs-royal)]">
-             Add to Google Calendar
-          </a>
-        </div>
-        <div class="mt-4 space-y-2">
-          <div class="flex flex-wrap items-center gap-3">
-            <button id="kpaButton" class="px-4 py-2 rounded-xl font-semibold shadow border border-[var(--sigma-gray)] bg-white disabled:opacity-50" disabled aria-label="Stepshow Tickets Button">
-              Stepshow Tickets (Available Sept 20)
-            </button>
-            <a href="https://maps.google.com/?q=Brown+Theater+Louisville+KY" target="_blank" rel="noopener"
-               class="px-4 py-2 rounded-xl font-semibold shadow border border-[var(--sigma-gray)] bg-white hover:bg-[var(--sigma-gray)] hover:bg-opacity-20" aria-label="Open Map to Brown Theater">Map</a>
-          </div>
-          <p id="kpaHelper" class="text-xs text-slate-500">Ticket sales open on <strong>September 20</strong>. A direct link will appear here.</p>
-          <a id="kpaLink" href="#" target="_blank" rel="noopener"
-             class="text-sm font-semibold text-[var(--pbs-royal)] underline hidden" style="display:none">
-            Buy Stepshow Tickets →
-          </a>
+             target="_blank" class="underline text-[var(--pbs-royal)]">Add to Google Calendar</a>
         </div>
       </div>
 
       <!-- Saturday Tailgate -->
-      <div class="bg-white rounded-2xl shadow p-6 ring-1 ring-[var(--sigma-gray)]">
-        <h3 class="text-xl font-bold">Saturday • Tailgate (Food & Drink Included)</h3>
-        <p class="mt-2 text-slate-600">Pregame fellowship before the football game. <em>Game ticket not included.</em></p>
-        <img src="assets/uofl-bc.jpg" loading="lazy" width="600" height="600" alt="Louisville vs Boston College logos" class="mt-3 rounded-xl shadow" />
+      <div class="card bg-white rounded-2xl p-6 ring-1 ring-[var(--sigma-gray)]">
+        <h3 class="text-xl font-bold">Saturday • Tailgate</h3>
+        <div class="flex items-center gap-3 mt-2">
+          <img src="assets/401234649.jpg" alt="UofL vs Boston College" loading="lazy" class="h-10 object-contain" height="40" />
+        </div>
         <ul class="mt-3 text-sm text-slate-700 list-disc list-inside">
-          <li>Time: Saturday 12:00–3:00 PM</li>
+          <li>Time: 12:00–3:00 PM</li>
           <li>Location: TBA (near stadium)</li>
+          <li>Football game ticket not included</li>
         </ul>
         <div class="mt-2 text-sm">
-          <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Tau%20Centennial%20Tailgate&dates=20250920T170000Z/20250920T200000Z&details=Tailgate%20before%20football%20game%20(food%20and%20drink%20included)%20-%20game%20ticket%20not%20included&location=Near%20Stadium%2C%20Louisville%2C%20KY"
-             target="_blank" class="underline text-[var(--pbs-royal)]" aria-label="Add Tailgate to Google Calendar">
-             Add to Google Calendar (Tailgate)
-          </a>
+          <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Tau%20Chapter%20Tailgate&dates=20250920T170000Z/20250920T200000Z&details=Tailgate%20near%20stadium&location=Louisville%20KY"
+             target="_blank" class="underline text-[var(--pbs-royal)]">Add to Google Calendar</a>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- DONATE (before roster) -->
+  <!-- SUPPORT / DONATE -->
   <section id="donate" class="max-w-6xl mx-auto px-4 py-12">
-    <h2 class="text-2xl sm:text-3xl font-extrabold relative pb-2 after:content-[''] after:absolute after:left-0 after:-bottom-1 after:w-24 after:h-1 after:bg-[var(--pbs-royal)]">Support Tau Chapter</h2>
-    <div class="mt-6 bg-white rounded-2xl shadow p-6 ring-1 ring-[var(--sigma-gray)] flex flex-col md:flex-row items-center gap-6">
-      <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https%3A%2F%2Fcash.app%2F%24UofLSigmas%2F" alt="Cash App QR" width="180" height="180" class="rounded" loading="lazy" />
-      <div>
-        <p class="text-slate-700">Donations help us deliver an unforgettable centennial weekend.</p>
-        <div class="mt-4 flex gap-3">
-          <a href="https://cash.app/$UofLSigmas/" target="_blank" rel="noopener" class="px-4 py-2 rounded-xl border border-[var(--sigma-gray)] bg-white shadow font-semibold">Donate via Cash App</a>
-        </div>
-      </div>
+    <h2 class="text-2xl sm:text-3xl font-extrabold">Support Tau Chapter</h2>
+    <p class="text-slate-600 mt-2">Remaining proceeds support current undergraduate brothers.</p>
+    <div class="mt-4 flex flex-wrap items-center gap-3">
+      <a href="https://cash.app/$UofLSigmas" target="_blank" class="px-5 py-3 bg-white rounded-xl border font-semibold shadow">Donate via Cash App</a>
     </div>
   </section>
 
   <!-- REGISTRATION -->
   <section id="register" class="max-w-6xl mx-auto px-4 py-12">
-    <div class="bg-white rounded-2xl shadow p-6 ring-1 ring-[var(--sigma-gray)]">
-      <h2 class="text-2xl sm:text-3xl font-extrabold relative pb-2 after:content-[''] after:absolute after:left-0 after:-bottom-1 after:w-24 after:h-1 after:bg-[var(--pbs-royal)]">Register</h2>
-      <p class="text-slate-600 mt-2">Complete the form below. You’ll be redirected to secure payment (Square) to finalize your registration.</p>
+    <div class="bg-white rounded-2xl p-6 ring-1 ring-[var(--sigma-gray)] card">
+      <h2 class="text-2xl sm:text-3xl font-extrabold">Register</h2>
+      <p class="text-slate-600 mt-2">Choose a sponsorship level, complete your info, then pay via Cash App or PayPal and confirm payment.</p>
+
+      <!-- Sponsorship tiers -->
+      <div id="tiers" class="mt-6 grid md:grid-cols-3 gap-4">
+        <!-- $100 -->
+        <label class="group block rounded-2xl border-2 border-[var(--sigma-gray)] p-4 cursor-pointer hover:border-[var(--pbs-royal)] bg-white">
+          <div class="flex items-start justify-between gap-2">
+            <div>
+              <div class="text-xl font-extrabold">$100</div>
+              <div class="font-semibold">Centennial Sponsorship</div>
+              <div class="mt-1 text-sm text-slate-600 flex flex-col gap-1">
+                <span>⭐ Special recognition from TAU</span>
+                <span>🍔 Tailgate included</span>
+                <span>🎽 T-shirt included</span>
+              </div>
+            </div>
+            <input type="radio" name="tier" value="100|Centennial Sponsorship" class="mt-1 h-5 w-5" checked />
+          </div>
+          <div class="mt-2 inline-flex items-center text-xs font-semibold text-white bg-[var(--pbs-royal)] px-2 py-1 rounded">Most Impactful</div>
+        </label>
+
+        <!-- $50 -->
+        <label class="group block rounded-2xl border-2 border-[var(--sigma-gray)] p-4 cursor-pointer hover:border-[var(--pbs-royal)] bg-white">
+          <div class="flex items-start justify-between gap-2">
+            <div>
+              <div class="text-xl font-extrabold">$50</div>
+              <div class="font-semibold">Tailgate + T‑shirt</div>
+              <div class="mt-1 text-sm text-slate-600 flex flex-col gap-1">
+                <span>🍔 Tailgate included</span>
+                <span>🎽 T-shirt included</span>
+              </div>
+            </div>
+            <input type="radio" name="tier" value="50|Tailgate + T-shirt" class="mt-1 h-5 w-5" />
+          </div>
+        </label>
+
+        <!-- $25 -->
+        <label class="group block rounded-2xl border-2 border-[var(--sigma-gray)] p-4 cursor-pointer hover:border-[var(--pbs-royal)] bg-white">
+          <div class="flex items-start justify-between gap-2">
+            <div>
+              <div class="text-xl font-extrabold">$25</div>
+              <div class="font-semibold">Tailgate only</div>
+              <div class="mt-1 text-sm text-slate-600 flex flex-col gap-1">
+                <span>🍔 Tailgate included</span>
+                <span>🎟 Football game ticket not included</span>
+              </div>
+            </div>
+            <input type="radio" name="tier" value="25|Tailgate only" class="mt-1 h-5 w-5" />
+          </div>
+        </label>
+      </div>
 
       <form id="regForm" class="mt-6 grid md:grid-cols-2 gap-6">
         <div>
           <label class="block text-sm font-medium">Full Name</label>
-          <input name="name" required class="mt-1 w-full rounded-xl border-[var(--sigma-gray)] focus:outline-none focus:ring-2 focus:ring-[var(--pbs-royal)] focus:border-[var(--pbs-royal)]" placeholder="First Last" />
+          <input name="name" required class="mt-1 w-full rounded-xl border-[var(--sigma-gray)] focus:outline-none focus:ring-2 focus:ring-[var(--pbs-royal)]" />
         </div>
         <div>
           <label class="block text-sm font-medium">Email</label>
-          <input type="email" name="email" required class="mt-1 w-full rounded-xl border-[var(--sigma-gray)] focus:outline-none focus:ring-2 focus:ring-[var(--pbs-royal)] focus:border-[var(--pbs-royal)]" placeholder="you@example.com" />
+          <input type="email" name="email" required class="mt-1 w-full rounded-xl border-[var(--sigma-gray)] focus:outline-none focus:ring-2 focus:ring-[var(--pbs-royal)]" />
         </div>
         <div>
           <label class="block text-sm font-medium">Phone</label>
-          <input type="tel" name="phone" required class="mt-1 w-full rounded-xl border-[var(--sigma-gray)] focus:outline-none focus:ring-2 focus:ring-[var(--pbs-royal)] focus:border-[var(--pbs-royal)]" placeholder="(555) 555-5555" />
+          <input type="tel" name="phone" required class="mt-1 w-full rounded-xl border-[var(--sigma-gray)] focus:outline-none focus:ring-2 focus:ring-[var(--pbs-royal)]" />
         </div>
         <div>
           <label class="block text-sm font-medium">Year Joined the Fraternity</label>
-          <input type="number" name="yearJoined" required min="1900" max="2100" class="mt-1 w-full rounded-xl border-[var(--sigma-gray)] focus:outline-none focus:ring-2 focus:ring-[var(--pbs-royal)] focus:border-[var(--pbs-royal)]" placeholder="e.g., 2005" />
+          <input type="number" name="yearJoined" required min="1900" max="2100" class="mt-1 w-full rounded-xl border-[var(--sigma-gray)] focus:outline-none focus:ring-2 focus:ring-[var(--pbs-royal)]" />
         </div>
         <div>
           <label class="block text-sm font-medium">T‑Shirt Size</label>
-          <select name="tshirtSize" class="mt-1 w-full rounded-xl border-[var(--sigma-gray)] focus:outline-none focus:ring-2 focus:ring-[var(--pbs-royal)] focus:border-[var(--pbs-royal)]">
-            <option>M</option><option>L</option><option>XL</option><option>2XL</option><option>3XL</option><option>4XL</option><option>5XL</option>
+          <select name="tshirtSize" required class="mt-1 w-full rounded-xl border-[var(--sigma-gray)] focus:outline-none focus:ring-2 focus:ring-[var(--pbs-royal)]">
+            <option value="M">M</option><option value="L">L</option><option value="XL">XL</option>
+            <option value="2XL">2XL</option><option value="3XL">3XL</option><option value="4XL">4XL</option><option value="5XL">5XL</option>
           </select>
         </div>
-        <div class="md:col-span-2">
-          <label class="block text-sm font-medium">Optional Photo (JPG/PNG)</label>
-          <input type="file" name="photo" accept="image/*" class="mt-1 w-full rounded-xl border-[var(--sigma-gray)]" />
-        </div>
 
-        <div class="hidden" style="display:none !important;">
+        <!-- Honeypot -->
+        <div class="hidden" style="display:none!important;">
           <label>Website</label>
           <input name="website" tabindex="-1" autocomplete="off" />
         </div>
 
+        <!-- Public roster opt-in -->
         <label class="flex items-center gap-2 md:col-span-2 text-sm">
           <input type="checkbox" name="optInPublic" class="rounded" checked />
           I’m OK with my name appearing on the public “Registered Attendees” list.
         </label>
 
+        <!-- Dynamic selection summary -->
+        <p id="tierSummary" class="md:col-span-2 text-sm text-slate-700">Selected: <strong>$100 – Centennial Sponsorship</strong></p>
+
         <div class="md:col-span-2 flex items-center justify-between gap-4">
-          <div class="text-sm text-slate-600">Registration Fee: <span class="font-semibold">$100</span></div>
-          <button type="submit" id="submitBtn" class="px-5 py-3 bg-[var(--pbs-royal)] hover:bg-[var(--pbs-royal-dark)] text-white rounded-xl shadow font-semibold">Register & Pay $100</button>
+          <div class="text-sm text-slate-600">Remaining proceeds support current undergraduate brothers.</div>
+          <button type="submit" id="submitBtn" class="px-5 py-3 bg-[var(--pbs-royal)] hover:bg-[var(--pbs-royal-dark)] text-white rounded-xl shadow font-semibold">Continue</button>
         </div>
         <p id="formMsg" class="md:col-span-2 text-sm text-slate-600"></p>
-        <p class="md:col-span-2 text-xs text-slate-500 mt-2"><strong>Privacy & Refund:</strong> We store only what we need to run the event. Registrations are non‑refundable; transfers permitted by contacting the organizers.</p>
       </form>
+
+      <!-- Confirmation panel (shown after submit) -->
+      <div id="confirmPanel" class="hidden mt-6 rounded-xl border p-4 bg-slate-50">
+        <h3 class="font-bold">Last Step: Send your payment, then confirm</h3>
+        <p class="text-sm mt-2">Please send <span id="payAmount" class="font-semibold">$100</span> via Cash App or PayPal, then click <em>Confirm Payment</em> below.</p>
+        <ul class="mt-2 list-disc list-inside text-sm">
+          <li>Cash App: <a href="https://cash.app/$UofLSigmas" target="_blank" class="underline">cash.app/$UofLSigmas</a></li>
+          <li>PayPal: <a href="https://paypal.me/your-handle" target="_blank" class="underline">paypal.me/your-handle</a></li>
+        </ul>
+        <div class="mt-3 text-sm">
+          Your payment code: <code id="paymentCode" class="px-2 py-1 bg-white rounded border">TBD</code>
+          <button id="copyCode" class="ml-2 px-2 py-1 text-xs border rounded bg-white">Copy</button>
+        </div>
+        <div class="mt-3">
+          <a id="confirmLink" href="#" class="px-4 py-2 rounded-lg bg-[var(--pbs-royal)] text-white font-semibold inline-block">Confirm Payment</a>
+        </div>
+        <p class="text-xs text-slate-500 mt-2">If you close this page, you can use the emailed link (if enabled) to confirm later.</p>
+      </div>
     </div>
   </section>
 
   <!-- ROSTER -->
   <section id="roster" class="max-w-6xl mx-auto px-4 py-12">
     <div class="flex items-center justify-between">
-      <h2 class="text-2xl sm:text-3xl font-extrabold relative pb-2 after:content-[''] after:absolute after:left-0 after:-bottom-1 after:w-24 after:h-1 after:bg-[var(--pbs-royal)]">Registered Attendees</h2>
-      <button id="refreshBtn" class="px-4 py-2 rounded-xl border border-[var(--sigma-gray)] bg-white shadow text-sm" aria-label="Refresh roster">Refresh</button>
+      <h2 class="text-2xl sm:text-3xl font-extrabold">Registered Attendees</h2>
+      <button id="refreshBtn" class="px-4 py-2 rounded-xl border bg-white shadow text-sm">Refresh</button>
     </div>
-    <p class="text-slate-600 mt-2">Grouped by decade of initiation, then by year joined.</p>
     <div id="rosterWrap" class="mt-6 grid md:grid-cols-2 gap-6"></div>
   </section>
 
-  <!-- FAQ -->
-  <section id="faq" class="max-w-6xl mx-auto px-4 py-12">
-    <h2 class="text-2xl sm:text-3xl font-extrabold relative pb-2 after:content-[''] after:absolute after:left-0 after:-bottom-1 after:w-24 after:h-1 after:bg-[var(--pbs-royal)]">FAQs</h2>
-    <div class="mt-6 grid md:grid-cols-2 gap-6">
-      <div class="bg-white rounded-2xl shadow p-6 ring-1 ring-[var(--sigma-gray)]">
-        <h3 class="font-bold">Is the football game ticket included?</h3>
-        <p class="mt-2 text-slate-600">No. Tailgate includes food & drink, but <strong>game tickets are not included</strong>.</p>
-      </div>
-      <div class="bg-white rounded-2xl shadow p-6 ring-1 ring-[var(--sigma-gray)]">
-        <h3 class="font-bold">Refunds</h3>
-        <p class="mt-2 text-slate-600">Registrations are non-refundable, but you may transfer your spot by contacting the organizers.</p>
-      </div>
-      <div class="bg-white rounded-2xl shadow p-6 ring-1 ring-[var(--sigma-gray)]">
-        <h3 class="font-bold">Accessibility</h3>
-        <p class="mt-2 text-slate-600">Event venues are ADA friendly. For specific accommodations, please note in your registration or contact us.</p>
-      </div>
-      <div class="bg-white rounded-2xl shadow p-6 ring-1 ring-[var(--sigma-gray)]">
-        <h3 class="font-bold">Dress Code</h3>
-        <p class="mt-2 text-slate-600">Casual. Wear <strong>Sigma paraphernalia</strong> for Friday, and <strong>Louisville or Sigma paraphernalia</strong> for Saturday.</p>
-      </div>
-      <div class="bg-white rounded-2xl shadow p-6 ring-1 ring-[var(--sigma-gray)]">
-        <h3 class="font-bold">What happens if it rains for the tailgate?</h3>
-        <p class="mt-2 text-slate-600">We’ll announce a covered location or tented area on the site and by email/SMS if weather shifts.</p>
-      </div>
-      <div class="bg-white rounded-2xl shadow p-6 ring-1 ring-[var(--sigma-gray)]">
-        <h3 class="font-bold">Can I pick up someone else’s wristband?</h3>
-        <p class="mt-2 text-slate-600">Yes with a photo of their ID or a waiver email from the registrant matching their order details.</p>
-      </div>
-    </div>
-  </section>
-
-  <footer class="border-t border-[var(--sigma-gray)]">
-    <div class="max-w-6xl mx-auto px-4 py-8 text-sm text-slate-600 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <img src="assets/charter members.jpg" loading="lazy" width="80" height="80" alt="Charter Members" class="w-10 h-10 object-cover rounded-full ring-2 ring-white shadow" />
-        <span>© 2025 Tau Chapter Centennial Homecoming</span>
-      </div>
-      <nav class="flex items-center gap-4">
-        <a href="#register" class="font-semibold">Register</a>
-        <a href="#schedule" class="font-semibold">Schedule</a>
-        <a href="#donate" class="font-semibold">Donate</a>
-        <a href="#roster" class="font-semibold">Roster</a>
-      </nav>
-    </div>
-
-    <!-- Footer Donate + QR -->
-    <div class="max-w-6xl mx-auto px-4 pb-6">
-      <div class="flex flex-wrap items-center gap-4">
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https%3A%2F%2Fcash.app%2F%24UofLSigmas%2F" alt="Cash App QR" width="120" height="120" class="rounded" loading="lazy" />
-        <a href="https://cash.app/$UofLSigmas/" target="_blank" rel="noopener" class="underline font-semibold">Donate via Cash App</a>
-      </div>
-    </div>
-
-    <!-- Collapsible Admin -->
-    <div class="max-w-6xl mx-auto px-4 pb-10">
-      <details>
-        <summary class="cursor-pointer select-none font-semibold">Admin</summary>
-        <div class="mt-3 flex flex-wrap items-center gap-3">
-          <input id="adminKey" type="password" placeholder="Passcode" class="rounded-xl border-[var(--sigma-gray)]" />
-          <button id="csvBtn" class="px-4 py-2 rounded-xl border border-[var(--sigma-gray)] bg-white shadow">Download CSV</button>
+  <!-- Footer micro-nav + Donate + QR + Admin -->
+  <footer class="border-t">
+    <div class="max-w-6xl mx-auto px-4 py-10 text-sm">
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <nav class="flex gap-4">
+          <a href="#register" class="underline">Register</a>
+          <a href="#schedule" class="underline">Schedule</a>
+          <a href="#donate" class="underline">Donate</a>
+          <a href="#roster" class="underline">Roster</a>
+        </nav>
+        <div class="flex items-center gap-3">
+          <a href="https://cash.app/$UofLSigmas" target="_blank" class="px-3 py-2 rounded-lg border bg-white">Donate via Cash App</a>
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=110x110&data=https%3A%2F%2Fcash.app%2F%24UofLSigmas" alt="Donate QR" class="w-14 h-14 rounded" />
         </div>
+      </div>
+
+      <details class="mt-6">
+        <summary class="cursor-pointer font-semibold">Admin</summary>
+        <div class="mt-3 flex flex-wrap items-center gap-3">
+          <input id="adminKey" type="password" placeholder="Passcode" class="rounded border px-3 py-2" />
+          <button id="csvBtn" class="px-3 py-2 rounded border bg-white">Download CSV</button>
+          <button id="totalsBtn" class="px-3 py-2 rounded border bg-white">Totals</button>
+          <button id="pendingBtn" class="px-3 py-2 rounded border bg-white">Load Pending</button>
+        </div>
+        <div id="pendingList" class="mt-4 grid md:grid-cols-2 gap-4"></div>
+        <pre id="totalsOut" class="mt-3 text-xs text-slate-600"></pre>
       </details>
+
+      <div class="mt-6 text-slate-500">© 2025 Tau Chapter Centennial Homecoming</div>
     </div>
   </footer>
 
-  <!-- Sticky Bar (mobile) -->
-  <div id="stickyBar" class="fixed bottom-0 inset-x-0 md:hidden bg-white/95 dark:bg-slate-900/95 border-t border-[var(--sigma-gray)] backdrop-blur px-4 py-3 flex items-center justify-between z-40">
-    <a href="#register" class="px-4 py-2 bg-[var(--pbs-royal)] hover:bg-[var(--pbs-royal-dark)] text-white rounded-xl font-semibold" aria-label="Register now">Register $100</a>
-    <a href="https://cash.app/$UofLSigmas/" target="_blank" rel="noopener" class="px-4 py-2 border border-[var(--sigma-gray)] rounded-xl font-semibold" aria-label="Donate via Cash App">Donate</a>
-  </div>
-
-  <!-- Success/Cancel toast script -->
   <script>
-  (function(){
-    function showToast(msg, ok=true){
-      var root=document.getElementById('toast-root');
-      if(!root){ root=document.createElement('div'); root.id='toast-root'; root.className='fixed top-4 right-4 z-50 space-y-2'; document.body.appendChild(root); }
-      var div=document.createElement('div');
-      div.className=(ok?'bg-green-600 text-white shadow rounded-xl px-4 py-3':'bg-amber-600 text-white shadow rounded-xl px-4 py-3');
-      div.textContent=msg; root.appendChild(div); setTimeout(function(){ div.remove(); },6000);
+    // Dark mode toggle
+    const darkToggle = document.getElementById('darkToggle');
+    if (darkToggle) {
+      darkToggle.addEventListener('click', () => {
+        document.body.classList.toggle('dark');
+      });
     }
-    try{ var p=new URLSearchParams(location.search);
-      if(p.get('success')==='1') showToast('Registration complete! Check your email for confirmation.',true);
-      else if(p.get('canceled')==='1') showToast('Checkout canceled. You can try again anytime.',false);
-    }catch(e){}
-  })();
-  </script>
-
-  <script>
-    // Ticket link date gate
-    const kpaButton=document.getElementById('kpaButton'); const kpaHelper=document.getElementById('kpaHelper');
-    const KPA_URL = (typeof KPA_URL_GLOBAL!=='undefined' && KPA_URL_GLOBAL) || 'https://tickets.kentuckyperformingarts.org/25109';
+    // Marquee
     (function(){
-      const now=new Date(); const liveDate=new Date('2025-09-20T05:00:00Z');
-      const linkEl=document.getElementById('kpaLink');
-      if(now>=liveDate && KPA_URL){ kpaButton.disabled=false; kpaButton.textContent='Buy Stepshow Tickets'; kpaHelper.textContent='Tickets now available via Kentucky Performing Arts.'; kpaButton.addEventListener('click',()=>window.open(KPA_URL,'_blank')); if(linkEl){ linkEl.href=KPA_URL; linkEl.classList.remove('hidden'); linkEl.style.display=''; } }
-      else { kpaButton.disabled=true; if(linkEl){ linkEl.classList.add('hidden'); linkEl.style.display='none'; } }
+      const phrases = ["Brotherhood","Scholarship","Service"];
+      let i=0;
+      setInterval(()=>{
+        i=(i+1)%phrases.length;
+        document.getElementById('marquee').textContent = phrases[i];
+      }, 2500);
     })();
 
-    // Registration -> Square Payment Link
-    const form=document.getElementById('regForm'); const msg=document.getElementById('formMsg'); const submitBtn=document.getElementById('submitBtn');
-    async function uploadPhotoIfAny(file){ if(!file) return {url:''}; const fd=new FormData(); fd.append('file',file); const r=await fetch('/.netlify/functions/upload_photo',{method:'POST',body:fd}); if(!r.ok) throw new Error('upload'); return r.json(); }
-    form.addEventListener('submit', async (e)=>{
-      e.preventDefault(); msg.textContent=''; submitBtn.disabled=true;
-      try{
-        const d=new FormData(form);
-        const payload={ name:d.get('name'), email:d.get('email'), phone:d.get('phone'), yearJoined:Number(d.get('yearJoined')), tshirtSize:String(d.get('tshirtSize')||''), website:d.get('website'), optInPublic:d.get('optInPublic')==='on' };
-        const file=d.get('photo'); if(file && file.size>0){ const up=await uploadPhotoIfAny(file); payload.photoUrl=up.url||''; }
-        const resp=await fetch('/.netlify/functions/create_checkout_link',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
-        if(!resp.ok) throw new Error('checkout'); const {url}=await resp.json(); location.href=url;
-      }catch(err){ msg.textContent='Something went wrong. Please try again.'; submitBtn.disabled=false; }
-    });
+    // Tier summary + amount binding
+    function currentTier() {
+      const checked = document.querySelector('input[name="tier"]:checked');
+      if (!checked) return { amount:100, name:"Centennial Sponsorship" };
+      const [amount, name] = checked.value.split('|');
+      return { amount: Number(amount), name };
+    }
+    function updateSummary() {
+      const t = currentTier();
+      document.getElementById('tierSummary').innerHTML = 'Selected: <strong>$'+t.amount+' – '+t.name+'</strong>';
+    }
+    document.querySelectorAll('input[name="tier"]').forEach(r => r.addEventListener('change', updateSummary));
+    updateSummary();
 
-    // Roster rendering
-    const rosterWrap=document.getElementById('rosterWrap'); const refreshBtn=document.getElementById('refreshBtn');
-    function groupByDecadeAndYear(list){ const g={}; for(const r of list){ if(r.optInPublic===false) continue; const y=Number(r.yearJoined); const dKey=`${Math.floor(y/10)*10}s`; g[dKey]=g[dKey]||{}; g[dKey][y]=g[dKey][y]||[]; g[dKey][y].push(r);} return g; }
+    // Roster rendering helpers
+    const rosterWrap = document.getElementById('rosterWrap');
+    const refreshBtn = document.getElementById('refreshBtn');
+    function groupByDecade(list){
+      const g={};
+      for(const r of list){
+        if (r.optInPublic === false) continue;
+        const y=Number(r.yearJoined||0); const d=Math.floor(y/10)*10; const k=d+'s';
+        g[k]=g[k]||{}; g[k][y]=g[k][y]||[]; g[k][y].push(r);
+      }
+      return g;
+    }
     function renderRoster(list){
-      const groups=groupByDecadeAndYear(list); const decades=Object.keys(groups).sort((a,b)=>parseInt(b)-parseInt(a));
-      rosterWrap.innerHTML=''; if(decades.length===0){ rosterWrap.innerHTML='<div class="text-slate-600">No registrations yet.</div>'; return; }
+      const g=groupByDecade(list);
+      const decades=Object.keys(g).sort((a,b)=>parseInt(b)-parseInt(a));
+      rosterWrap.innerHTML='';
+      if(!decades.length){ rosterWrap.innerHTML='<div class="text-slate-600">No registrations yet.</div>'; return; }
       for(const d of decades){
-        const years=Object.keys(groups[d]).map(Number).sort((a,b)=>a-b);
-        const col=document.createElement('div'); col.className='bg-white rounded-2xl shadow p-6 ring-1 ring-[var(--sigma-gray)]'; col.innerHTML=`<h3 class="text-xl font-bold">${d}</h3>`;
+        const years=Object.keys(g[d]).map(Number).sort((a,b)=>a-b);
+        const col=document.createElement('div');
+        col.className='bg-white rounded-2xl p-6 ring-1 ring-[var(--sigma-gray)] card';
+        col.innerHTML='<h3 class="text-xl font-bold">'+d+'</h3>';
         for(const y of years){
-          const people=groups[d][y].sort((a,b)=>a.name.localeCompare(b.name)).map(p=>`
-            <li class="flex items-center gap-3 py-1">
-              ${p.photoUrl?`<img src="${p.photoUrl}" loading="lazy" width="32" height="32" class="w-8 h-8 rounded-full object-cover" alt="${p.name}">`:''}
-              <span class="font-medium">${p.name}</span>
-              <span class="text-xs text-slate-500">(${y}${p.tshirtSize?`, ${p.tshirtSize}`:''})</span>
-            </li>`).join('');
-          col.insertAdjacentHTML('beforeend', `<div class="mt-4"><div class="text-sm font-semibold text-slate-700">${y}</div><ul class="mt-1 text-sm">${people}</ul></div>`);
+          const items=g[d][y].sort((a,b)=>a.name.localeCompare(b.name)).map(p=>
+            '<li class="py-1 flex gap-2 items-center"><span class="font-medium">'+p.name+'</span> <span class="text-xs text-slate-500">('+y+(p.tshirtSize?', '+p.tshirtSize:'')+')</span></li>'
+          ).join('');
+          col.insertAdjacentHTML('beforeend', '<div class="mt-4"><div class="text-sm font-semibold">'+y+'</div><ul class="mt-1 text-sm">'+items+'</ul></div>');
         }
         rosterWrap.appendChild(col);
       }
     }
-    async function loadRoster(){ try{ rosterWrap.innerHTML='<div class="text-slate-600">Loading roster…</div>'; const r=await fetch('/.netlify/functions/list_registrants'); if(!r.ok) throw 0; const data=await r.json(); renderRoster(data.registrants||[]);}catch(e){ rosterWrap.innerHTML='<div class="text-slate-600">Unable to load roster at this time.</div>'; } }
+    async function loadRoster(){
+      rosterWrap.innerHTML='<div class="text-slate-600">Loading roster…</div>';
+      try{ const r=await fetch('/.netlify/functions/list_registrants'); const j=await r.json(); renderRoster(j.registrants||[]); }
+      catch(e){ rosterWrap.innerHTML='<div class="text-slate-600">Unable to load roster.</div>'; }
+    }
     refreshBtn.addEventListener('click', loadRoster); loadRoster();
 
-    // Dark mode + Hero rotator
-    function heroRotator(){ const el=document.getElementById('heroTaglineRotator'); if(!el) return; const items=['Brotherhood','Scholarship','Service']; let i=0; setInterval(()=>{ i=(i+1)%items.length; el.textContent=items[i]; },2500); }
-    (function(){ const btn=document.getElementById('darkToggle'); const apply=(on)=>document.documentElement.classList.toggle('dark',!!on); const saved=localStorage.getItem('dark'); apply(saved==='1'); if(btn){ btn.addEventListener('click',()=>{ const on=!document.documentElement.classList.contains('dark'); apply(on); localStorage.setItem('dark',on?'1':'0'); }); } heroRotator(); })();
+    // Form submit -> create pending & show confirm
+    const form=document.getElementById('regForm'); const formMsg=document.getElementById('formMsg');
+    const confirmPanel=document.getElementById('confirmPanel'); const payAmount=document.getElementById('payAmount');
+    const paymentCodeEl=document.getElementById('paymentCode'); const copyCode=document.getElementById('copyCode');
+    const confirmLink=document.getElementById('confirmLink');
 
-    // Footer Admin CSV
-    const csvBtn=document.getElementById('csvBtn'); function adminKey(){ return document.getElementById('adminKey')?.value||''; }
-    if(csvBtn){ csvBtn.addEventListener('click', async ()=>{ const resp=await fetch('/.netlify/functions/export_csv',{ headers:{'x-admin-key': adminKey()} }); if(!resp.ok){ alert('Unauthorized or error.'); return; } const blob=await resp.blob(); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='registrants.csv'; a.click(); URL.revokeObjectURL(url); }); }
+    copyCode.addEventListener('click',()=>{
+      const code=paymentCodeEl.textContent; navigator.clipboard.writeText(code);
+      copyCode.textContent='Copied'; setTimeout(()=>copyCode.textContent='Copy',1200);
+    });
+
+    form.addEventListener('submit', async (e)=>{
+      e.preventDefault(); formMsg.textContent='';
+      const t=currentTier();
+      payAmount.textContent='$'+t.amount;
+      const data=new FormData(form);
+      const payload={
+        name:data.get('name'), email:data.get('email'), phone:data.get('phone'),
+        yearJoined:Number(data.get('yearJoined')), tshirtSize:data.get('tshirtSize'),
+        website:data.get('website'), optInPublic:data.get('optInPublic')==='on',
+        packageName:t.name, packageAmount:t.amount
+      };
+      try{
+        const r=await fetch('/.netlify/functions/submit_manual_registration', {
+          method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload)
+        });
+        if(!r.ok) throw new Error('submit failed');
+        const j=await r.json();
+        paymentCodeEl.textContent=j.paymentCode || 'UNKNOWN';
+        confirmLink.href=j.confirmUrl || '#';
+        confirmPanel.classList.remove('hidden');
+        form.scrollIntoView({behavior:'smooth', block:'center'});
+      }catch(err){ formMsg.textContent='Something went wrong. Please try again.'; }
+    });
+
+    // Admin footer
+    const adminKey=()=>document.getElementById('adminKey')?.value||'';
+    const csvBtn=document.getElementById('csvBtn');
+    const totalsBtn=document.getElementById('totalsBtn');
+    const pendingBtn=document.getElementById('pendingBtn');
+    const pendingList=document.getElementById('pendingList');
+    const totalsOut=document.getElementById('totalsOut');
+
+    csvBtn.addEventListener('click', async ()=>{
+      const r=await fetch('/.netlify/functions/export_csv', { headers:{'x-admin-key':adminKey()} });
+      if(!r.ok){ alert('Unauthorized or error'); return; }
+      const blob=await r.blob(); const url=URL.createObjectURL(blob);
+      const a=document.createElement('a'); a.href=url; a.download='registrants.csv'; a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    totalsBtn.addEventListener('click', async ()=>{
+      totalsOut.textContent='Calculating…';
+      const r=await fetch('/.netlify/functions/list_registrants'); const j=await r.json();
+      const byAmt={}; let sum=0; (j.registrants||[]).forEach(x=>{ const a=Number(x.packageAmount||0); byAmt[a]=(byAmt[a]||0)+1; sum+=a; });
+      let lines=[]; Object.keys(byAmt).sort((a,b)=>Number(b)-Number(a)).forEach(k=> lines.push(`${byAmt[k]} × $${k}`));
+      lines.push(`Total: $${sum}`);
+      totalsOut.textContent=lines.join(' | ');
+    });
+
+    pendingBtn.addEventListener('click', async ()=>{
+      pendingList.innerHTML='Loading…';
+      const r=await fetch('/.netlify/functions/list_pending', { headers:{'x-admin-key':adminKey()} });
+      if(!r.ok){ pendingList.innerHTML='Unauthorized or error'; return; }
+      const j=await r.json();
+      pendingList.innerHTML=(j.items||[]).map(p=>`
+        <div class="rounded-xl border p-3 bg-white">
+          <div class="font-semibold">${p.name} <span class="text-xs text-slate-500">(${p.packageAmount ? '$'+p.packageAmount : ''} ${p.packageName||''})</span></div>
+          <div class="text-xs text-slate-600">${p.email} • ${p.phone}</div>
+          <div class="text-xs text-slate-600">Year ${p.yearJoined} • Size ${p.tshirtSize||''}</div>
+          <div class="mt-2 flex gap-2">
+            <button onclick="approve('${p.key}')" class="px-3 py-1 rounded border bg-white text-sm">Approve</button>
+            <button onclick="deny('${p.key}')" class="px-3 py-1 rounded border bg-white text-sm">Deny</button>
+          </div>
+        </div>`).join('');
+    });
+
+    window.approve = async (key)=>{
+      const r=await fetch('/.netlify/functions/approve_pending', { method:'POST', headers:{'Content-Type':'application/json','x-admin-key':adminKey()}, body:JSON.stringify({key}) });
+      if(r.ok){ alert('Approved'); loadRoster(); pendingBtn.click(); } else alert('Error');
+    };
+    window.deny = async (key)=>{
+      const r=await fetch('/.netlify/functions/deny_pending', { method:'POST', headers:{'Content-Type':'application/json','x-admin-key':adminKey()}, body:JSON.stringify({key}) });
+      if(r.ok){ alert('Removed'); pendingBtn.click(); } else alert('Error');
+    };
   </script>
 </body>
 </html>
