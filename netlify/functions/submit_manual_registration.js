@@ -1,4 +1,5 @@
-const { json, bad, paymentCode, uid, DB } = require('./_common');
+
+const { json, bad, paymentCode, uid, stores, setJSON } = require('./_common');
 
 exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') return bad('Method Not Allowed', 405);
@@ -7,7 +8,7 @@ exports.handler = async (event) => {
   const now = new Date().toISOString();
   const code = paymentCode();
   const token = uid() + uid();
-  const key = `pending_${Date.now()}_${uid()}`;
+  const key = `p_${Date.now()}_${uid()}`;
 
   const item = {
     key,
@@ -23,7 +24,11 @@ exports.handler = async (event) => {
     paymentCode: code,
     token
   };
-  DB.pending[key] = item;
+
+  const { pending, tokens } = stores();
+  await setJSON(pending, key, item);
+  await setJSON(tokens, token, { key }); // map token -> pending key
+
   const confirmUrl = `${process.env.SITE_URL || ''}/.netlify/functions/confirm_payment?token=${token}`;
   return json({ ok:true, paymentCode: code, confirmUrl, key });
 };

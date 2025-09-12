@@ -1,13 +1,16 @@
-const { bad, auth, DB } = require('./_common');
+
+const { bad, auth, stores, listJSON } = require('./_common');
 
 exports.handler = async (event) => {
   if (!auth(event)) return bad('Unauthorized', 401);
+  const { registrants } = stores();
+  const list = await listJSON(registrants);
+
   const rows = [
     ['Generated At', new Date().toISOString()].join(','),
     ['Name','Email','Phone','Year','TshirtSize','Package Name','Amount','Verification','Confirmed At','Created At'].join(',')
   ];
-  for(const k of Object.keys(DB.registrants)){
-    const r = DB.registrants[k];
+  for (const r of list) {
     const line = [
       (r.name||'').replace(/,/g,' '),
       (r.email||'').replace(/,/g,' '),
@@ -25,10 +28,7 @@ exports.handler = async (event) => {
   const body = rows.join('\n');
   return {
     statusCode: 200,
-    headers: {
-      'Content-Type': 'text/csv',
-      'Content-Disposition': 'attachment; filename="registrants.csv"'
-    },
+    headers: { 'Content-Type': 'text/csv', 'Content-Disposition': 'attachment; filename="registrants.csv"' },
     body
   };
 };

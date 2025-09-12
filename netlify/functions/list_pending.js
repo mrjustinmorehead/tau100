@@ -1,7 +1,8 @@
-const { json, bad, auth, DB } = require('./_common');
 
+const { json, bad, auth, stores, listJSON } = require('./_common');
 exports.handler = async (event) => {
   if (!auth(event)) return bad('Unauthorized', 401);
-  const items = Object.keys(DB.pending).map(k => ({ key:k, ...DB.pending[k] }));
+  const { pending } = stores();
+  const items = await listJSON(pending);
   return json({ items });
 };

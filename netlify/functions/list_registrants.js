@@ -1,6 +1,7 @@
-const { json, DB } = require('./_common');
 
+const { json, stores, listJSON } = require('./_common');
 exports.handler = async () => {
-  const registrants = Object.keys(DB.registrants).map(k => DB.registrants[k]);
-  return json({ registrants });
+  const { registrants } = stores();
+  const registrantsList = await listJSON(registrants);
+  return json({ registrants: registrantsList });
 };
