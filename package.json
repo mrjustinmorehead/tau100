@@ -1,10 +1,8 @@
 {
-  "name": "tau-centennial-full-blobs",
-  "version": "1.0.0",
+  "name": "tau-centennial-blobs",
+  "type": "module",
   "private": true,
-  "license": "MIT",
   "dependencies": {
-    "@netlify/blobs": "^6.4.0",
-    "node-fetch": "^3.3.2"
+    "@netlify/blobs": "^6.4.0"
   }
 }
