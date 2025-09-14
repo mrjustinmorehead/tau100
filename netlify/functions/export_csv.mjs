@@ -1,3 +1,4 @@
+\
 import { bad, auth, stores } from "./_common.mjs";
 
 export const handler = async (event) => {
@@ -25,10 +26,10 @@ export const handler = async (event) => {
     ].join(",");
     rows.push(line);
   }
-  const body = rows.join("\n");
+  const body = rows.join("\\n");
   return {
     statusCode: 200,
-    headers: { "Content-Type": "text/csv", "Content-Disposition": "attachment; filename=\"registrants.csv\"" },
+    headers: { "Content-Type": "text/csv", "Content-Disposition": "attachment; filename=\\"registrants.csv\\"" },
     body
   };
 };
