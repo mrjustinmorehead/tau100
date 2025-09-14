@@ -1,4 +1,3 @@
-\
 import { json, bad, paymentCode, uid, stores } from "./_common.mjs";
 
 export const handler = async (event) => {
@@ -10,18 +9,10 @@ export const handler = async (event) => {
   const token = uid() + uid();
   const key = `pending_${Date.now()}_${uid()}`;
   const item = {
-    key,
-    name: body.name || "",
-    email: body.email || "",
-    phone: body.phone || "",
-    yearJoined: Number(body.yearJoined || 0),
-    tshirtSize: body.tshirtSize || "",
-    packageName: body.packageName || "",
-    packageAmount: Number(body.packageAmount || 0),
-    optInPublic: !!body.optInPublic,
-    createdAt: now,
-    paymentCode: code,
-    token
+    key, name: body.name || "", email: body.email || "", phone: body.phone || "",
+    yearJoined: Number(body.yearJoined || 0), tshirtSize: body.tshirtSize || "",
+    packageName: body.packageName || "", packageAmount: Number(body.packageAmount || 0),
+    optInPublic: !!body.optInPublic, createdAt: now, paymentCode: code, token
   };
   const store = stores.pending();
   await store.setJSON(key, item);

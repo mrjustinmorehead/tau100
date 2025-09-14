@@ -1,12 +1,11 @@
-\
-// Shared helpers (ESM)
+// ESM helpers
 import crypto from "crypto";
 import { getStore } from "@netlify/blobs";
 
 export const json = (body, code=200) => ({ statusCode: code, headers:{ "Content-Type":"application/json" }, body: JSON.stringify(body) });
 export const bad = (msg="Bad Request", code=400) => ({ statusCode: code, body: msg });
 export const auth = (event) => {
-  const key = event.headers["x-admin-key"] || event.headers["X-Admin-Key"];
+  const key = event.headers?.["x-admin-key"] || event.headers?.["X-Admin-Key"];
   return !!(process.env.ADMIN_KEY && key && key === process.env.ADMIN_KEY);
 };
 export const uid = () => crypto.randomBytes(6).toString("hex");
