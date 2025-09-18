@@ -1,6 +1,6 @@
-import { json, stores, uid } from "./_common.mjs";
+import { json, stores, uid, blobsMode } from "./_common.mjs";
 
-export const handler = async (event) => {
+export const handler = async () => {
   const attemptKey = `diag_${Date.now()}_${uid()}`;
   let wrote = false, readBack = null, error = null;
   try {
@@ -16,8 +16,8 @@ export const handler = async (event) => {
     wrote,
     readBack,
     error,
+    mode: blobsMode(),
     env: {
-      // helpful, but not leaking secrets
       hasTauSiteId: !!process.env.TAU_SITE_ID,
       hasTauBlobsToken: !!process.env.TAU_BLOBS_TOKEN,
       node: process.version

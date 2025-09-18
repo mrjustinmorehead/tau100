@@ -1,6 +1,6 @@
-// Shared helpers (ESM) with optional explicit Blobs config via custom env vars
+// Shared helpers (ESM) using createClient({ siteID, token }) when provided
 import crypto from "crypto";
-import { getStore } from "@netlify/blobs";
+import { getStore, createClient } from "@netlify/blobs";
 
 export const json = (body, code=200) => ({ statusCode: code, headers:{ "Content-Type":"application/json" }, body: JSON.stringify(body) });
 export const bad = (msg="Bad Request", code=400) => ({ statusCode: code, body: msg });
@@ -11,15 +11,23 @@ export const auth = (event) => {
 export const uid = () => crypto.randomBytes(6).toString("hex");
 export const paymentCode = () => "TAU-" + Math.random().toString(36).slice(2,8).toUpperCase();
 
-// By default, rely on Netlify's automatic context.
-// If it fails, you can supply TAU_SITE_ID and TAU_BLOBS_TOKEN in site env to force it.
-const blobsOpts = {};
+let client = null;
+let mode = "auto"; // 'auto' (getStore) or 'client' (createClient)
+
 if (process.env.TAU_SITE_ID && process.env.TAU_BLOBS_TOKEN) {
-  blobsOpts.siteID = process.env.TAU_SITE_ID;
-  blobsOpts.token  = process.env.TAU_BLOBS_TOKEN;
+  // Force explicit client if custom env vars are present
+  client = createClient({
+    siteID: process.env.TAU_SITE_ID,
+    token:  process.env.TAU_BLOBS_TOKEN,
+  });
+  mode = "client";
 }
 
+const storeFor = (name) => client ? client.getStore(name) : getStore(name);
+
 export const stores = {
-  pending:     () => getStore("pending", blobsOpts),
-  registrants: () => getStore("registrants", blobsOpts),
+  pending:     () => storeFor("pending"),
+  registrants: () => storeFor("registrants"),
 };
+
+export const blobsMode = () => mode;
