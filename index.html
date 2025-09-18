@@ -74,7 +74,7 @@
 
   <!-- SCHEDULE -->
   <section id="schedule" class="max-w-6xl mx-auto px-4 py-12">
-    <h2 class="text-2xl sm:text-3xl font-extrabold">Weekend Schedule</h2>
+    <h2 class="text-2xl sm:text-3xl font-extrabold">Weekend Schedule October 24 & 25</h2>
     <div class="mt-6 grid md:grid-cols-3 gap-6">
       <!-- Friday Social -->
       <div class="card bg-white rounded-2xl p-6 ring-1 ring-[var(--sigma-gray)]">
@@ -340,5 +340,100 @@
     window.approve = async (key)=>{ const r=await fetch('/.netlify/functions/approve_pending', { method:'POST', headers:{'Content-Type':'application/json','x-admin-key':adminKey()}, body:JSON.stringify({key}) }); if(r.ok){ alert('Approved'); loadRoster(); pendingBtn.click(); } else alert('Error'); };
     window.deny = async (key)=>{ const r=await fetch('/.netlify/functions/deny_pending', { method:'POST', headers:{'Content-Type':'application/json','x-admin-key':adminKey()}, body:JSON.stringify({key}) }); if(r.ok){ alert('Removed'); pendingBtn.click(); } else alert('Error'); };
   </script>
+  <script>
+(function(){
+  const form = document.querySelector('#regForm');
+  const submitBtn = document.querySelector('#submitBtn');
+  const msg = document.querySelector('#formMsg');
+  const confirmPanel = document.querySelector('#confirmPanel');
+  const payAmount = document.querySelector('#payAmount');
+  const paymentCodeEl = document.querySelector('#paymentCode');
+  const confirmLink = document.querySelector('#confirmLink');
+
+  if (!form) {
+    console.error('regForm not found in DOM');
+    return;
+  }
+
+  function currentTier() {
+    const c = document.querySelector('input[name="tier"]:checked');
+    if (!c) return { amount: 100, name: 'Centennial Sponsorship' };
+    const [amount, name] = c.value.split('|');
+    return { amount: Number(amount), name };
+  }
+
+  async function submitRegistration(e){
+    e.preventDefault();
+    msg.textContent = '';
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Submitting…';
+
+    // Collect form data
+    const data = new FormData(form);
+    const tier = currentTier();
+    payAmount.textContent = `$${tier.amount}`;
+
+    const payload = {
+      name: data.get('name')?.trim(),
+      email: data.get('email')?.trim(),
+      phone: data.get('phone')?.trim(),
+      yearJoined: Number(data.get('yearJoined')),
+      tshirtSize: data.get('tshirtSize'),
+      website: data.get('website'),             // honeypot
+      optInPublic: data.get('optInPublic') === 'on',
+      packageName: tier.name,
+      packageAmount: tier.amount
+    };
+
+    // Basic front-end validation (mirrors the function)
+    for (const k of ['name','email','phone','yearJoined','tshirtSize']) {
+      if (!payload[k]) {
+        msg.textContent = `Missing field: ${k}`;
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Continue';
+        return;
+      }
+    }
+
+    try {
+      const res = await fetch('/.netlify/functions/submit_manual_registration', {
+        method: 'POST',
+        headers: { 'Content-Type':'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      const text = await res.text(); // read raw so we can log problems
+      let json;
+      try { json = JSON.parse(text); } catch (e) {
+        console.error('Non-JSON response from submit function:', text);
+        throw new Error('Unexpected response from server');
+      }
+
+      if (!res.ok || json?.ok === false) {
+        console.error('Submit error:', json);
+        msg.textContent = json?.error || 'Unable to submit. Please try again.';
+        return;
+      }
+
+      // Success
+      paymentCodeEl.textContent = json.paymentCode || 'UNKNOWN';
+      confirmLink.href = json.confirmUrl || '#';
+      confirmPanel.classList.remove('hidden');
+      confirmPanel.scrollIntoView({behavior:'smooth', block:'center'});
+    } catch (err) {
+      console.error('Submit exception:', err);
+      msg.textContent = err?.message || 'Something went wrong. Please try again.';
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Continue';
+    }
+  }
+
+  // Rebind safely (avoid duplicate listeners)
+  form.removeEventListener('submit', submitRegistration);
+  form.addEventListener('submit', submitRegistration);
+})();
+</script>
+
 </body>
 </html>
