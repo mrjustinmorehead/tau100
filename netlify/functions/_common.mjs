@@ -1,4 +1,4 @@
-// Shared helpers (ESM) relying on Netlify auto-detected Blobs config
+// Shared helpers (ESM) with optional explicit Blobs config via custom env vars
 import crypto from "crypto";
 import { getStore } from "@netlify/blobs";
 
@@ -11,7 +11,15 @@ export const auth = (event) => {
 export const uid = () => crypto.randomBytes(6).toString("hex");
 export const paymentCode = () => "TAU-" + Math.random().toString(36).slice(2,8).toUpperCase();
 
+// By default, rely on Netlify's automatic context.
+// If it fails, you can supply TAU_SITE_ID and TAU_BLOBS_TOKEN in site env to force it.
+const blobsOpts = {};
+if (process.env.TAU_SITE_ID && process.env.TAU_BLOBS_TOKEN) {
+  blobsOpts.siteID = process.env.TAU_SITE_ID;
+  blobsOpts.token  = process.env.TAU_BLOBS_TOKEN;
+}
+
 export const stores = {
-  pending: () => getStore("pending"),
-  registrants: () => getStore("registrants"),
+  pending:     () => getStore("pending", blobsOpts),
+  registrants: () => getStore("registrants", blobsOpts),
 };

@@ -1,15 +1,18 @@
-# Environment required for Netlify Blobs (explicit config fallback)
+# Blobs environment override (optional)
 
-Set these in Netlify → Site settings → Build & deploy → Environment:
+Normally, Netlify Blobs auto-configures in production. If you still see:
+> The environment has not been configured to use Netlify Blobs...
 
-- SITE_URL = https://tau100.netlify.app
-- ADMIN_KEY = In5nite1914!
-- SITE_ID = 4a380a79-5b63-4089-abb1-02b16dc792c9
-- NETLIFY_API_TOKEN = <your personal access token>
+Add **custom** env vars (not reserved by Netlify) in Site settings → Build & deploy → Environment:
 
-How to create NETLIFY_API_TOKEN:
-- Netlify UI → User settings (top-right avatar) → Applications → Personal access tokens → New token.
-- Give a name (e.g., "Tau100 Blobs"), copy the token value, save it as NETLIFY_API_TOKEN in your site env.
+- TAU_SITE_ID = (your site id, e.g. 4a380a79-5b63-4089-abb1-02b16dc792c9)
+- TAU_BLOBS_TOKEN = (a Netlify personal access token)
 
-Note: On Netlify production, Blobs usually work without explicit config.
-This fallback ensures Functions can always write to Blobs even when auto-detection fails.
+How to create TAU_BLOBS_TOKEN:
+- Netlify UI → *User settings* → *Applications* → *Personal access tokens* → *New token*.
+- Give it a name (e.g., "Tau100 Blobs"), copy the value, paste it as TAU_BLOBS_TOKEN.
+
+Then deploy. You can verify server-side access at:
+- /.netlify/functions/debug_env
+
+You should see: { "ok": true, "wrote": true, "readBack": { ... } }
