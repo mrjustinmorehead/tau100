@@ -1,5 +1,6 @@
-import { bad, auth, stores } from "./_common.js";
-export const handler = async (event) => {
+
+const { bad, auth, stores } = require("./_common.cjs");
+module.exports.handler = async (event) => {
   if (!auth(event)) return bad("Unauthorized", 401);
   const regs = stores.registrants();
   const keys = await regs.list();

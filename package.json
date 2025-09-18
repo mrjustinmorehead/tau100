@@ -1,8 +1,7 @@
 {
-  "name": "tau-centennial-functions-js",
+  "name": "tau-centennial-functions-cjs",
   "version": "1.0.0",
   "private": true,
-  "type": "module",
   "license": "MIT",
   "dependencies": {
     "@netlify/blobs": "^6.4.0"

@@ -1,5 +1,6 @@
-import { json, bad, auth, stores } from "./_common.js";
-export const handler = async (event) => {
+
+const { json, bad, auth, stores } = require("./_common.cjs");
+module.exports.handler = async (event) => {
   if (!auth(event)) return bad("Unauthorized", 401);
   if (event.httpMethod !== "POST") return bad("Method Not Allowed", 405);
   const { key } = JSON.parse(event.body || "{}");
