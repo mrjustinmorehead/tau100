@@ -78,7 +78,7 @@
     <div class="mt-6 grid md:grid-cols-3 gap-6">
       <!-- Friday Social -->
       <div class="card bg-white rounded-2xl p-6 ring-1 ring-[var(--sigma-gray)]">
-        <h3 class="text-xl font-bold">Friday • Social Gathering</h3>
+        <h3 class="text-xl font-bold">Friday, October 24 • Social Gathering</h3>
         <ul class="mt-3 text-sm text-slate-700 list-disc list-inside">
           <li>Time: 5:00–6:30 PM (near Brown Theater, TBA)</li>
           <li>We’ll enter the Stepshow together</li>
@@ -91,8 +91,17 @@
 
       <!-- Friday Stepshow -->
       <div class="card bg-white rounded-2xl p-6 ring-1 ring-[var(--sigma-gray)]">
-        <h3 class="text-xl font-bold">Friday Night • Homecoming Stepshow</h3>
-        <img src="assets/tau100-4.jpg" loading="lazy" alt="Stepshow" class="rounded-xl w-full h-40 object-cover mt-2" width="640" height="320" />
+        <h3 class="text-xl font-bold">Friday, October 24 • Homecoming Stepshow</h3>
+        <div class="mt-2 text-sm">
+  <a href="https://tickets.kentuckyperformingarts.org/25109"
+     target="_blank" class="underline text-[var(--pbs-royal)] font-semibold">
+    Buy Tickets via Kentucky Performing Arts
+  </a>
+  <p class="mt-1 text-gray-600 italic">
+    Use promo code <strong>MIGHTY25</strong> at checkout for discounted tickets.
+  </p>
+</div>
+<img src="assets/tau100-4.jpg" loading="lazy" alt="Stepshow" class="rounded-xl w-full h-40 object-cover mt-2" width="640" height="320" />
         <ul class="mt-3 text-sm text-slate-700 list-disc list-inside">
           <li>Time: 7:00 PM</li>
           <li>Venue: Brown Theater (Kentucky Performing Arts)</li>
@@ -105,7 +114,7 @@
 
       <!-- Saturday Tailgate -->
       <div class="card bg-white rounded-2xl p-6 ring-1 ring-[var(--sigma-gray)]">
-        <h3 class="text-xl font-bold">Saturday • Tailgate</h3>
+        <h3 class="text-xl font-bold">Saturday, October 25 • Tailgate</h3>
         <div class="flex items-center gap-3 mt-2">
           <img src="assets/401234649.jpg" alt="UofL vs Boston College" loading="lazy" class="h-10 object-contain" height="40" />
         </div>
@@ -236,32 +245,29 @@
 
       <!-- Confirmation panel (shown after submit) -->
       <div id="confirmPanel" class="hidden mt-6 rounded-xl border p-4 bg-slate-50">
-<h3 class="font-bold">Last Step: Send your payment, then confirm</h3>
-<p class="text-sm mt-2">
-  Please send <span id="payAmount" class="font-semibold">$100</span> via one of the options below,
-  then check “I paid” to enable the confirm link.
-</p>
+        <h3 class="font-bold">Last Step: Send your payment, then confirm</h3>
+        <p class="text-sm mt-2">Please send <span id="payAmount" class="font-semibold">$100</span> via Cash App or PayPal, then click <em>Confirm Payment</em> below.</p>
+        <ul class="mt-2 list-disc list-inside text-sm">
+          <li>Cash App: <a href="https://cash.app/$UofLSigmas" target="_blank" class="underline">cash.app/$UofLSigmas</a></li>
+          <li>PayPal: <a href="https://paypal.me/your-handle" target="_blank" class="underline">paypal.me/your-handle</a></li>
+        </ul>
+        <div class="mt-3 text-sm">
+          Your payment code: <code id="paymentCode" class="px-2 py-1 bg-white rounded border">TBD</code>
+          <button id="copyCode" class="ml-2 px-2 py-1 text-xs border rounded bg-white">Copy</button>
+        
+<a id="payVenmo" class="btn" target="_blank" rel="noopener">Pay with Venmo</a>
 
-<p style="display:flex; gap:8px; flex-wrap:wrap; margin-top:.5rem;">
-  <a id="payVenmo"  class="px-4 py-2 rounded-lg bg-[var(--pbs-royal)] text-white font-semibold inline-block" target="_blank" rel="noopener">Pay with Venmo</a>
-  <a id="payCashApp" class="px-4 py-2 rounded-lg bg-[var(--pbs-royal)] text-white font-semibold inline-block" target="_blank" rel="noopener">Pay with Cash App</a>
-  <a id="payPayPal" class="px-4 py-2 rounded-lg bg-[var(--pbs-royal)] text-white font-semibold inline-block" target="_blank" rel="noopener">Pay with PayPal</a>
-</p>
+<a id="payCashApp" class="btn" target="_blank" rel="noopener">Pay with Cash App</a>
 
-<label style="display:flex;gap:8px;align-items:center;margin:8px 0" class="text-sm">
-  <input id="paidCheck" type="checkbox">
-  <span>I paid</span>
-</label>
+<a id="payPayPal" class="btn" target="_blank" rel="noopener">Pay with PayPal</a>
 
-<div class="mt-2 text-sm">
-  Your payment code: <code id="paymentCode" class="px-2 py-1 bg-white rounded border">TBD</code>
-  <button id="copyCode" class="ml-2 px-2 py-1 text-xs border rounded bg-white">Copy</button>
+<label style="display:flex;gap:8px;align-items:center;margin:8px 0"><input id="paidCheck" type="checkbox"><span>I paid</span></label>
 </div>
-
-<div class="mt-3 sticky bottom-2">
-  <a id="confirmLink" href="#" class="px-4 py-2 rounded-lg bg-[var(--pbs-royal)] text-white font-semibold inline-block" aria-disabled="true" style="pointer-events:none;opacity:0.5">Confirm Payment</a>
-</div>
-</div>
+        <div class="mt-3 sticky bottom-2">
+          <a id="confirmLink" href="#" class="px-4 py-2 rounded-lg bg-[var(--pbs-royal)] text-white font-semibold inline-block">Confirm Payment</a>
+        </div>
+        <p class="text-xs text-slate-500 mt-2">If you close this page, you can use the emailed link (if enabled) to confirm later.</p>
+      </div>
     </div>
   </section>
 
@@ -337,7 +343,9 @@
     const confirmPanel=document.getElementById('confirmPanel'); const payAmount=document.getElementById('payAmount');
     const paymentCodeEl=document.getElementById('paymentCode'); const copyCode=document.getElementById('copyCode'); const confirmLink=document.getElementById('confirmLink');
     copyCode.addEventListener('click',()=>{ const code=paymentCodeEl.textContent; navigator.clipboard.writeText(code); copyCode.textContent='Copied'; setTimeout(()=>copyCode.textContent='Copy',1200); });
-          const payload={ name:data.get('name'), email:data.get('email'), phone:data.get('phone'), yearJoined:Number(data.get('yearJoined')), tshirtSize:data.get('tshirtSize'), website:data.get('website'), optInPublic:data.get('optInPublic')==='on', packageName:t.name, packageAmount:t.amount };
+    form.addEventListener('submit', async (e)=>{
+      e.preventDefault(); formMsg.textContent=''; const t=currentTier(); payAmount.textContent='$'+t.amount; const data=new FormData(form);
+      const payload={ name:data.get('name'), email:data.get('email'), phone:data.get('phone'), yearJoined:Number(data.get('yearJoined')), tshirtSize:data.get('tshirtSize'), website:data.get('website'), optInPublic:data.get('optInPublic')==='on', packageName:t.name, packageAmount:t.amount };
       try{ const r=await fetch('/.netlify/functions/submit_manual_registration',{ method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload)}); if(!r.ok) throw new Error('submit failed'); const j=await r.json(); paymentCodeEl.textContent=j.paymentCode||'UNKNOWN'; confirmLink.href=j.confirmUrl||'#'; confirmPanel.classList.remove('hidden'); form.scrollIntoView({behavior:'smooth', block:'center'});} catch(err){ formMsg.textContent='Something went wrong. Please try again.'; }
     });
 

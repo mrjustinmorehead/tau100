@@ -62,8 +62,9 @@
     if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Submitting…'; }
 
     try {
-      const tier = getTier();
       const fd = new FormData(form);
+      const tier = getTier();
+
       const payload = {
         name: fd.get('name')?.trim(),
         email: fd.get('email')?.trim(),
