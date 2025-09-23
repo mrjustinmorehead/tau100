@@ -1,70 +1,65 @@
+
 (function () {
-  const FORM_SEL = '#regForm';
-  const ENDPOINT = '/.netlify/functions/submit_manual_registration';
-  const form = document.querySelector(FORM_SEL);
-  const submitBtn = document.querySelector('#submitBtn');
-  const msg = document.querySelector('#formMsg');
-  const confirmPanel = document.querySelector('#confirmPanel');
-  const payAmountLabel = document.querySelector('#payAmount');
-  const paymentCodeEl = document.querySelector('#paymentCode');
-  const confirmLink = document.querySelector('#confirmLink');
-  const venmoBtn  = document.querySelector('#payVenmo');
-  const cashBtn   = document.querySelector('#payCashApp');
-  const paypalBtn = document.querySelector('#payPayPal');
-  const paidCheck = document.querySelector('#paidCheck');
+  const form = document.querySelector('#regForm');
+  if (!form) return;
 
-  if (!form) { console.error('Form not found at selector', FORM_SEL); return; }
+  const submitBtn = document.querySelector('#submitBtn') || form.querySelector('button[type="submit"]');
+  const msg = document.querySelector('#formMsg') || document.createElement('div');
+  if (!msg.parentNode) form.appendChild(msg);
 
-  function getTier() {
+  const confirmPanel   = document.querySelector('#confirmPanel');
+  const payAmountLabel = document.getElementById('payAmount');
+  const paymentCodeEl  = document.getElementById('paymentCode');
+  const confirmLink    = document.getElementById('confirmLink');
+  const venmoBtn       = document.getElementById('payVenmo');
+  const cashBtn        = document.getElementById('payCashApp');
+  const paypalBtn      = document.getElementById('payPayPal');
+  const paidCheck      = document.getElementById('paidCheck');
+
+  function setStatus(t, isErr){
+    msg.textContent = t || '';
+    msg.style.color = isErr ? '#b00020' : '#0b6';
+  }
+  function setConfirmEnabled(on){
+    if (!confirmLink) return;
+    confirmLink.setAttribute('aria-disabled', on ? 'false' : 'true');
+    confirmLink.style.pointerEvents = on ? 'auto' : 'none';
+    confirmLink.style.opacity = on ? '1' : '0.5';
+  }
+
+  function getTier(){
     const chosen = document.querySelector('input[name="tier"]:checked');
     if (!chosen) return { amount: 100, name: 'Centennial Sponsorship' };
     const [amount, name] = chosen.value.split('|');
     return { amount: Number(amount), name };
   }
 
-  function setStatus(text, isError) {
-    if (!msg) return;
-    msg.textContent = text || '';
-    msg.style.color = isError ? '#b00020' : '#0b6';
+  // Payment URL builders
+  function buildVenmo(username, amount, note){
+    const p = new URLSearchParams({ txn:'pay', amount:String(amount||0), note:note||'' });
+    return `https://venmo.com/${encodeURIComponent(username)}?${p.toString()}`;
   }
-
-  function setConfirmEnabled(enabled) {
-    if (!confirmLink) return;
-    confirmLink.setAttribute('aria-disabled', enabled ? 'false' : 'true');
-    confirmLink.style.pointerEvents = enabled ? 'auto' : 'none';
-    confirmLink.style.opacity = enabled ? '1' : '0.5';
-  }
-
-  function buildVenmo(username, amount, note) {
-    try {
-      const params = new URLSearchParams({ txn: 'pay', amount: String(amount || 0), note: note || '' });
-      return `https://venmo.com/${encodeURIComponent(username)}?${params.toString()}`;
-    } catch { return `https://venmo.me/${encodeURIComponent(username)}?txn=pay&amount=${encodeURIComponent(amount||0)}&note=${encodeURIComponent(note||'')}`; }
-  }
-  function buildCashApp(cashtag, amount, note) {
-    const base = `https://cash.app/${cashtag.startsWith('$') ? cashtag : '$' + cashtag}`;
-    const qs = new URLSearchParams();
-    if (amount) qs.set('amount', String(amount));
-    if (note)   qs.set('note', note);
-    const q = qs.toString();
+  function buildCashApp(cashtag, amount, note){
+    const base = `https://cash.app/${cashtag.startsWith('$') ? cashtag : ('$'+cashtag)}`;
+    const p = new URLSearchParams();
+    if (amount) p.set('amount', String(amount));
+    if (note)   p.set('note', note);
+    const q = p.toString();
     return q ? `${base}?${q}` : base;
   }
-  function buildPayPal(user, amount, note) {
+  function buildPayPal(user, amount, note){
     const base = `https://paypal.me/${encodeURIComponent(user)}`;
     const withAmount = amount ? `${base}/${encodeURIComponent(String(amount))}` : base;
-    if (note) return `${withAmount}?note=${encodeURIComponent(note)}`;
-    return withAmount;
+    return note ? `${withAmount}?note=${encodeURIComponent(note)}` : withAmount;
   }
 
-  async function onSubmit(e) {
+  form.addEventListener('submit', async (e)=>{
     e.preventDefault();
     setStatus('', false);
-    if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Submitting…'; }
-
-    try {
+    if (submitBtn){ submitBtn.disabled = true; submitBtn.textContent = 'Submitting…'; }
+    try{
       const fd = new FormData(form);
-      const tier = getTier();
-
+      const t = getTier();
       const payload = {
         name: fd.get('name')?.trim(),
         email: fd.get('email')?.trim(),
@@ -73,50 +68,44 @@
         tshirtSize: fd.get('tshirtSize'),
         website: fd.get('website'),
         optInPublic: fd.get('optInPublic') === 'on',
-        packageName: tier.name,
-        packageAmount: tier.amount
+        packageName: t.name,
+        packageAmount: t.amount
       };
 
       for (const k of ['name','email','phone','yearJoined','tshirtSize']) {
-        if (!payload[k]) { setStatus(`Missing field: ${k}`, true); return; }
+        if (!payload[k]) { setStatus('Missing ' + k, true); return; }
       }
 
-      if (payAmountLabel) payAmountLabel.textContent = `$${tier.amount}`;
+      if (payAmountLabel) payAmountLabel.textContent = `$${t.amount}`;
 
-      const res = await fetch(ENDPOINT, {
-        method: 'POST', headers: { 'Content-Type':'application/json' },
-        body: JSON.stringify(payload),
+      const r = await fetch('/.netlify/functions/submit_manual_registration', {
+        method: 'POST',
+        headers: { 'Content-Type':'application/json' },
+        body: JSON.stringify(payload)
       });
-      const raw = await res.text();
+
+      const raw = await r.text();
       let data;
-      try { data = JSON.parse(raw); } catch (e) {
-        console.error('Non-JSON response:', raw);
+      try { data = JSON.parse(raw); } catch {
         setStatus('Unexpected server response.', true);
         return;
       }
-      if (!res.ok || data?.ok === false) {
-        console.error('Function error:', data);
+      if (!r.ok || data?.ok === false) {
         setStatus(data?.error || 'Unable to submit.', true);
         return;
       }
 
       const code = data.paymentCode || 'PENDING';
+      const amount = Number(data.packageAmount || t.amount || 100);
+      const note = `Tau100 ${code}`;
+
       if (paymentCodeEl) paymentCodeEl.textContent = code;
       if (confirmLink)   confirmLink.href = data.confirmUrl || '#';
       if (confirmPanel)  confirmPanel.classList.remove('hidden');
-      confirmPanel?.scrollIntoView({ behavior:'smooth', block:'center' });
 
-      const note = `Tau100 ${code}`;
-      const venmoUrl  = buildVenmo('morehead', tier.amount, note);
-      const cashUrl   = buildCashApp('$Morehead', tier.amount, note);
-      const paypalUrl = buildPayPal('morehead', tier.amount, note);
-
-      if (venmoBtn)  venmoBtn.href  = venmoUrl;
-      if (cashBtn)   cashBtn.href   = cashUrl;
-      if (paypalBtn) paypalBtn.href = paypalUrl;
-
-      const focusPaid = () => setTimeout(() => { paidCheck && paidCheck.focus(); }, 300);
-      [venmoBtn, cashBtn, paypalBtn].forEach(btn => btn && btn.addEventListener('click', focusPaid, { once: true }));
+      if (venmoBtn)  venmoBtn.href  = buildVenmo('morehead', amount, note);
+      if (cashBtn)   cashBtn.href   = buildCashApp('$Morehead', amount, note);
+      if (paypalBtn) paypalBtn.href = buildPayPal('morehead', amount, note);
 
       setConfirmEnabled(false);
       if (paidCheck) {
@@ -124,15 +113,11 @@
         paidCheck.addEventListener('change', () => setConfirmEnabled(paidCheck.checked));
       }
 
-      setStatus('Saved! Choose a payment method, then check “I paid” to enable the confirm link.', false);
-    } catch (err) {
-      console.error('Submit exception:', err);
+      setStatus('Saved! Choose Venmo, Cash App, or PayPal, then check “I paid” to enable Confirm.', false);
+    }catch(err){
       setStatus(err?.message || 'Something went wrong.', true);
-    } finally {
-      if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Continue'; }
+    }finally{
+      if (submitBtn){ submitBtn.disabled = false; submitBtn.textContent = 'Continue'; }
     }
-  }
-
-  form.removeEventListener('submit', onSubmit);
-  form.addEventListener('submit', onSubmit);
+  });
 })();
