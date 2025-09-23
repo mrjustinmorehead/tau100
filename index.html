@@ -244,32 +244,50 @@
         <p id="formMsg" class="md:col-span-2 text-sm text-slate-600"></p>
       </form>
 
-      <!-- Confirmation panel (shown after submit) -->
-      <div id="confirmPanel" class="hidden mt-6 rounded-xl border p-4 bg-slate-50">
-        <h3 class="font-bold">Last Step: Send your payment, then confirm</h3>
-        <p class="text-sm mt-2">Please send <span id="payAmount" class="font-semibold">$100</span> via Cash App or PayPal, then click <em>Confirm Payment</em> below.</p>
-        <ul class="mt-2 list-disc list-inside text-sm">
-          <li>Cash App: <a href="https://cash.app/$UofLSigmas" target="_blank" class="underline">cash.app/$UofLSigmas</a></li>
-          <li>PayPal: <a href="https://paypal.me/your-handle" target="_blank" class="underline">paypal.me/your-handle</a></li>
-        </ul>
-        <div class="mt-3 text-sm">
-          Your payment code: <code id="paymentCode" class="px-2 py-1 bg-white rounded border">TBD</code>
-          <button id="copyCode" class="ml-2 px-2 py-1 text-xs border rounded bg-white">Copy</button>
-        
-<a id="payVenmo" class="btn" target="_blank" rel="noopener">Pay with Venmo</a>
+<!-- Confirmation panel (shown after submit) -->
+<div id="confirmPanel" class="hidden mt-6 rounded-xl border p-4 bg-slate-50">
+  <h3 class="font-bold">Choose a payment option, then confirm</h3>
+  <p class="text-sm mt-2">
+    Please send <span id="payAmount" class="font-semibold">$100</span> via one of the options below,
+    then click <em>Confirm Payment</em>.
+  </p>
+  <ul class="mt-2 list-disc list-inside text-sm space-y-1">
+    <li>
+      Venmo: <a id="payVenmo" href="https://venmo.com/morehead" target="_blank" class="underline">venmo.com/morehead</a>
+    </li>
+    <li>
+      Cash App: <a id="payCashApp" href="https://cash.app/$Morehead" target="_blank" class="underline">cash.app/$Morehead</a>
+    </li>
+    <li>
+      PayPal: <a id="payPayPal" href="https://paypal.me/morehead" target="_blank" class="underline">paypal.me/morehead</a>
+    </li>
+  </ul>
 
-<a id="payCashApp" class="btn" target="_blank" rel="noopener">Pay with Cash App</a>
+  <div class="mt-3 text-sm">
+    Your payment code:
+    <code id="paymentCode" class="px-2 py-1 bg-white rounded border">TBD</code>
+    <button id="copyCode" class="ml-2 px-2 py-1 text-xs border rounded bg-white">Copy</button>
 
-<a id="payPayPal" class="btn" target="_blank" rel="noopener">Pay with PayPal</a>
+    <label class="flex items-center gap-2 mt-3">
+      <input id="paidCheck" type="checkbox">
+      <span>I paid</span>
+    </label>
+  </div>
 
-<label style="display:flex;gap:8px;align-items:center;margin:8px 0"><input id="paidCheck" type="checkbox"><span>I paid</span></label>
+  <div class="mt-3 sticky bottom-2">
+    <a id="confirmLink"
+       href="#"
+       class="px-4 py-2 rounded-lg bg-[var(--pbs-royal)] text-white font-semibold inline-block opacity-50 pointer-events-none"
+       aria-disabled="true">
+      Confirm Payment
+    </a>
+  </div>
+
+  <p class="text-xs text-slate-500 mt-2">
+    If you close this page, you can use the emailed link (if enabled) to confirm later.
+  </p>
 </div>
-        <div class="mt-3 sticky bottom-2">
-          <a id="confirmLink" href="#" class="px-4 py-2 rounded-lg bg-[var(--pbs-royal)] text-white font-semibold inline-block">Confirm Payment</a>
-        </div>
-        <p class="text-xs text-slate-500 mt-2">If you close this page, you can use the emailed link (if enabled) to confirm later.</p>
-      </div>
-    </div>
+
   </section>
 
   <!-- ROSTER -->
