@@ -4,18 +4,24 @@ const common = require('./_common.cjs');
 exports.handler = async (event) => {
   try {
     if (event.httpMethod !== 'POST') return common.bad(405, 'POST only');
-    const body = JSON.parse(event.body || '{}');
-    if ((body.website||'').trim() !== '') return common.json({ ok:true, spam:true }, 200); // honeypot
+    common.assertBlobs();
+
+    let body;
+    try { body = JSON.parse(event.body || '{}'); }
+    catch { return common.bad(400, 'Invalid JSON'); }
+
+    if ((body.website||'').trim() !== '') return common.json({ ok:true, spam:true }, 200);
 
     const required = ['name','email','phone','yearJoined','packageName','packageAmount'];
-    for (const k of required) if (body[k] == null || body[k] === '') return common.bad(400, `Missing ${k}`);
+    const missing = required.filter(k => body[k] == null || body[k] === '');
+    if (missing.length) return common.bad(400, 'Missing fields', { missing });
 
     const payCode = common.code(6);
     const item = {
       key: 'pend_' + Date.now().toString(36),
-      name: body.name,
-      email: body.email,
-      phone: body.phone,
+      name: String(body.name),
+      email: String(body.email),
+      phone: String(body.phone),
       yearJoined: Number(body.yearJoined),
       tshirtSize: body.tshirtSize || null,
       optInPublic: !!body.optInPublic,
@@ -33,6 +39,6 @@ exports.handler = async (event) => {
     const confirmUrl = `/.netlify/functions/confirm_payment?code=${encodeURIComponent(payCode)}`;
     return common.json({ ok:true, paymentCode: payCode, confirmUrl });
   } catch (e) {
-    return common.bad(500, e.message || 'error');
+    return common.bad(500, e.message || 'error', { where: 'submit_manual_registration' });
   }
 };
