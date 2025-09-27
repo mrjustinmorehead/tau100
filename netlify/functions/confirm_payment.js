@@ -1,37 +1,36 @@
+// netlify/functions/confirm_payment.js
+const common = require('./_common.cjs');
+exports.handler = async (event) => {
+  try {
+    const code = (event.queryStringParameters && event.queryStringParameters.code) || '';
+    if (!code) return common.bad(400, 'code required');
 
-// confirm_payment.js — Hardened for Blobs API differences
-const { bad, stores } = require("./_common.cjs");
+    const pend = await common.stores.pending();
+    const reg  = await common.stores.registrants();
+    const listP = await pend.getJSON();
+    const idx = listP.findIndex(x => (x.code||'').toUpperCase() === String(code).toUpperCase());
+    if (idx === -1) {
+      return common.json({ ok:false, message:'Payment code not found or already confirmed' }, 404);
+    }
+    const it = listP.splice(idx,1)[0];
+    const listR = await reg.getJSON();
+    listR.push({
+      key: 'reg_' + Date.now().toString(36),
+      name: it.name, email: it.email, phone: it.phone,
+      yearJoined: it.yearJoined, tshirtSize: it.tshirtSize,
+      optInPublic: it.optInPublic, packageName: it.packageName, packageAmount: it.packageAmount,
+      ts: Date.now()
+    });
+    await pend.setJSON(listP);
+    await reg.setJSON(listR);
 
-module.exports.handler = async (event) => {
-  const token = (event.queryStringParameters && event.queryStringParameters.token) || "";
-  if (!token) return bad("Missing token", 400);
-
-  const pend = stores.pending();
-  const keys = await pend.list();
-  const arr = (keys && Array.isArray(keys.blobs)) ? keys.blobs : [];
-
-  let foundKey = null, item = null;
-  for (const k of arr) {
-    const key = typeof k === "string" ? k : k.key;
-    if (!key) continue;
-    const j = await pend.getJSON(key);
-    if (j && j.token === token) { foundKey = key; item = j; break; }
+    const html = `<!doctype html><meta charset="utf-8"><title>Confirmed</title>
+      <style>body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;padding:2rem}</style>
+      <h1>Payment Confirmed</h1>
+      <p>Thanks! Your registration has been recorded.</p>
+      <p><a href="/">Return to site</a></p>`;
+    return { statusCode:200, headers:{'Content-Type':'text/html'}, body: html };
+  } catch (e) {
+    return common.bad(500, e.message || 'error');
   }
-  if (!item) return bad("Invalid token", 400);
-
-  delete item.token;
-  item.verification = "self";
-  item.confirmedAt = new Date().toISOString();
-
-  const regs = stores.registrants();
-  const rkey = `reg_${Date.now()}_${Math.random().toString(36).slice(2,8)}`;
-  await regs.setJSON(rkey, item);
-  await pend.delete(foundKey);
-
-  const host = event.headers && (event.headers.host || event.headers.Host);
-  const proto = (event.headers && (event.headers["x-forwarded-proto"] || event.headers["X-Forwarded-Proto"])) || "https";
-  const origin = process.env.SITE_URL || (host ? `${proto}://${host}` : "");
-  const url = origin ? `${origin}/?success=1` : "/?success=1";
-
-  return { statusCode: 302, headers: { Location: url } };
 };

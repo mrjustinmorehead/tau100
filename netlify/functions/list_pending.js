@@ -1,14 +1,13 @@
-
-const { json, bad, auth, stores } = require("./_common.cjs");
-module.exports.handler = async (event) => {
-  if (!auth(event)) return bad("Unauthorized", 401);
-  const store = stores.pending();
-  const keys = await store.list();
-  const items = [];
-  for (const k of keys.blobs) {
-    const j = await store.getJSON(k.key);
-    if (j) items.push({ key: k.key, ...j });
+// netlify/functions/list_pending.js
+const common = require('./_common.cjs');
+exports.handler = async (event) => {
+  try {
+    const admin = event.headers['x-admin-key'] || event.headers['X-Admin-Key'];
+    if (!common.auth(admin)) return common.bad(401, 'Unauthorized');
+    const db = await common.stores.pending();
+    const items = await db.getJSON();
+    return common.json({ ok:true, items });
+  } catch (e) {
+    return common.bad(500, e.message || 'error');
   }
-  items.sort((a,b)=> new Date(b.createdAt)-new Date(a.createdAt));
-  return json({ items });
 };

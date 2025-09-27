@@ -1,13 +1,11 @@
-
-const { json, stores } = require("./_common.cjs");
-module.exports.handler = async () => {
-  const regs = stores.registrants();
-  const keys = await regs.list();
-  const registrants = [];
-  for (const k of keys.blobs) {
-    const j = await regs.getJSON(k.key);
-    if (j) registrants.push(j);
+// netlify/functions/list_registrants.js
+const common = require('./_common.cjs');
+exports.handler = async () => {
+  try {
+    const db = await common.stores.registrants();
+    const registrants = await db.getJSON();
+    return common.json({ ok:true, registrants });
+  } catch (e) {
+    return common.bad(500, e.message || 'error');
   }
-  registrants.sort((a,b)=> new Date(b.confirmedAt||b.createdAt||0) - new Date(a.confirmedAt||a.createdAt||0));
-  return json({ registrants });
 };
