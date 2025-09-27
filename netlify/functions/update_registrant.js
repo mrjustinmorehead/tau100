@@ -1,0 +1,31 @@
+// netlify/functions/update_registrant.js
+const c = require('./_common.cjs');
+
+exports.handler = async (event) => {
+  try {
+    if (event.httpMethod !== 'POST') return c.bad(405, 'POST only');
+
+    const admin = event.headers['x-admin-key'] || event.headers['X-Admin-Key'];
+    if (!c.auth(admin)) return c.bad(401, 'Unauthorized');
+
+    let body = {};
+    try { body = JSON.parse(event.body || '{}'); } catch { return c.bad(400, 'Invalid JSON'); }
+
+    const { key, patch = {} } = body;
+    if (!key) return c.bad(400, 'key required');
+
+    const db = await c.stores.registrants();
+    const list = await db.getJSON();
+
+    const idx = list.findIndex(r => r.key === key);
+    if (idx === -1) return c.bad(404, 'Registrant not found');
+
+    const fields = ['name','email','phone','yearJoined','tshirtSize','optInPublic','packageName','packageAmount'];
+    for (const f of fields) if (Object.prototype.hasOwnProperty.call(patch, f)) list[idx][f] = patch[f];
+
+    await db.setJSON(list);
+    return c.json({ ok: true, registrant: list[idx] });
+  } catch (err) {
+    return c.bad(500, err.message || 'error');
+  }
+};
