@@ -1,15 +1,11 @@
-Tau100 package (fixed)
-======================
-
-What this contains
-------------------
-- index.html (full page with schedule, payment, roster, admin)
-- netlify/functions/_common.cjs (runtime-bound Blobs; no tokens required)
+Tau100 Final Bundle
+===================
+- index.html (full UI; schedule preserved; payment panel; roster; admin)
+- netlify/functions/*.js (robust, runtime-bound blob client via _common.cjs)
 - package.json (declares @netlify/blobs)
 
-How to deploy
--------------
-1) Drag & drop this whole folder into your GitHub repo (replace files).
-2) Commit. Netlify will auto-deploy.
-3) Visit /.netlify/functions/list_registrants to confirm JSON loads.
-4) Try a test registration; Confirm panel should appear with code + link.
+Deploy:
+1) Upload entire bundle to your GitHub repo (replace existing files).
+2) Commit to main; Netlify auto-builds.
+3) Verify /.netlify/functions/list_registrants returns JSON.
+4) Test new registration; confirm -> roster shows it after approval/confirm.
