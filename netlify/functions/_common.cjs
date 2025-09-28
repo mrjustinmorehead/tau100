@@ -1,7 +1,6 @@
 // Runtime-bound Netlify Blobs helper (no tokens/siteID needed in production)
 const { getStore } = require('@netlify/blobs');
 
-// JSON helpers
 function json(status, body) {
   return {
     statusCode: status,

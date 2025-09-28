@@ -1,14 +1,15 @@
-Tau100 — Everything Working Bundle
-=================================
-Drag-and-drop to GitHub, then on Netlify set env vars and deploy.
+Tau100 package (fixed)
+======================
 
-Required Netlify environment variables:
-- ADMIN_KEY         (passcode for Admin tools)
-- TAU_SITE_ID       (your Netlify Site ID for this site’s blobs)
-- TAU_BLOBS_TOKEN   (Blobs token with read+write)
+What this contains
+------------------
+- index.html (full page with schedule, payment, roster, admin)
+- netlify/functions/_common.cjs (runtime-bound Blobs; no tokens required)
+- package.json (declares @netlify/blobs)
 
-Notes:
-- All functions are CommonJS (no ESM issues).
-- Submit button posts to /.netlify/functions/submit_manual_registration
-- Confirm link moves record from pending -> registrants
-- Public roster hides T-shirt size; Admin can edit/export via footer.
+How to deploy
+-------------
+1) Drag & drop this whole folder into your GitHub repo (replace files).
+2) Commit. Netlify will auto-deploy.
+3) Visit /.netlify/functions/list_registrants to confirm JSON loads.
+4) Try a test registration; Confirm panel should appear with code + link.

@@ -327,13 +327,11 @@
     </div>
   </footer>
 
-  <!-- Inline defensive script to guarantee Submit + Roster work -->
+  <!-- Inline defensive script -->
   <script>
   (function () {
     if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', boot); } else { boot(); }
-
     function boot() {
-      // Dark toggle + marquee
       const darkToggle=document.getElementById('darkToggle');
       if(localStorage.getItem('tau.dark')==='1'){ document.body.classList.add('dark'); }
       darkToggle?.addEventListener('click',()=>{
@@ -344,20 +342,17 @@
         setInterval(()=>{ i=(i+1)%phrases.length; document.getElementById('marquee').textContent=phrases[i]; }, 2500);
       })();
 
-      // Helpers
       const tierSummary=document.getElementById('tierSummary');
       function currentTier(){ const c=document.querySelector('input[name="tier"]:checked'); if(!c) return {amount:100,name:"Centennial Sponsorship"}; const [a,n]=c.value.split('|'); return {amount:Number(a||100), name:n||"Centennial Sponsorship"}; }
       function updateSummary(){ const t=currentTier(); if(tierSummary) tierSummary.innerHTML='Selected: <strong>$'+t.amount+' – '+t.name+'</strong>'; }
       document.querySelectorAll('input[name="tier"]').forEach(r=>r.addEventListener('change',updateSummary)); updateSummary();
 
-      // Roster
       const rosterWrap=document.getElementById('rosterWrap'); const refreshBtn=document.getElementById('refreshBtn');
       function groupByDecade(list){ const g={}; for(const r of (list||[])){ if(r && r.optInPublic===false) continue; const y=Number(r?.yearJoined||0); const d=Math.floor(y/10)*10; const k=(isFinite(d)&&d)?(d+'s'):'Unknown'; g[k]=g[k]||{}; g[k][y]=g[k][y]||[]; g[k][y].push(r);} return g; }
-      function renderRoster(list){ if(!rosterWrap) return; const g=groupByDecade(list); const decades=Object.keys(g).sort((a,b)=>parseInt(b)-parseInt(a)); if(!decades.length){ rosterWrap.innerHTML='<div class="text-slate-600">No registrations yet.</div>'; return;} rosterWrap.innerHTML=''; for(const d of decades){ const years=Object.keys(g[d]).map(Number).sort((a,b)=>a-b); const col=document.createElement('div'); col.className='bg-white rounded-2xl p-6 ring-1 ring-[var(--sigma-gray)] card'; col.innerHTML='<h3 class="text-xl font-bold">'+d+'</h3>'; for(const y of years){ const items=g[d][y].sort((a,b)=> (a.name||'').localeCompare(b.name||'')).map(p=>'<li class="py-1 flex gap-2 items-center"><span class="font-medium">'+(p.name||'')+'</span> <span class="text-xs text-slate-500">('+y+(p.tshirtSize?', '+p.tshirtSize:'')+')</span></li>').join(''); col.insertAdjacentHTML('beforeend','<div class="mt-4"><div class="text-sm font-semibold">'+y+'</div><ul class="mt-1 text-sm">'+items+'</ul></div>'); } rosterWrap.appendChild(col);} }
+      function renderRoster(list){ if(!rosterWrap) return; const g=groupByDecade(list); const decades=Object.keys(g).sort((a,b)=>parseInt(b)-parseInt(a)); if(!decades.length){ rosterWrap.innerHTML='<div class="text-slate-600">No registrations yet.</div>'; return;} rosterWrap.innerHTML=''; for(const d of decades){ const years=Object.keys(g[d]).map(Number).sort((a,b)=>a-b); const col=document.createElement('div'); col.className='bg-white rounded-2xl p-6 ring-1 ring-[var(--sigma-gray)] card'; col.innerHTML='<h3 class="text-xl font-bold">'+d+'</h3>'; for(const y of years){ const items=g[d][y].sort((a,b)=>(a.name||'').localeCompare(b.name||'')).map(p=>'<li class="py-1 flex gap-2 items-center"><span class="font-medium">'+(p.name||'')+'</span> <span class="text-xs text-slate-500">('+y+(p.tshirtSize?', '+p.tshirtSize:'')+')</span></li>').join(''); col.insertAdjacentHTML('beforeend','<div class="mt-4"><div class="text-sm font-semibold">'+y+'</div><ul class="mt-1 text-sm">'+items+'</ul></div>'); } rosterWrap.appendChild(col);} }
       async function loadRoster(){ if(!rosterWrap) return; rosterWrap.innerHTML='<div class="text-slate-600">Loading roster…</div>'; try{ const r=await fetch('/.netlify/functions/list_registrants',{ headers:{'cache-control':'no-cache'} }); const j=await r.json(); renderRoster(j.registrants||[]);} catch(e){ rosterWrap.innerHTML='<div class="text-slate-600">Unable to load roster.</div>'; console.error('Roster load failed:', e);} }
       refreshBtn?.addEventListener('click',loadRoster); loadRoster();
 
-      // Submit
       const form=document.getElementById('regForm'); const formMsg=document.getElementById('formMsg');
       const confirmPanel=document.getElementById('confirmPanel'); const payAmount=document.getElementById('payAmount');
       const paymentCodeEl=document.getElementById('paymentCode'); const copyCode=document.getElementById('copyCode'); const confirmLink=document.getElementById('confirmLink');
@@ -382,13 +377,6 @@
           console.error('Submit error:', err);
         }
       });
-
-      // Admin delete UI (optional; uses existing functions if present)
-      const adminKey=()=>document.getElementById('adminKey')?.value||'';
-      const manageBtn=document.getElementById('manageRegsBtn'); const manageList=document.getElementById('manageList');
-      async function loadManageList(){ if(!manageList) return; manageList.innerHTML='Loading…'; try{ const r=await fetch('/.netlify/functions/list_registrants'); const j=await r.json(); const rows=(j.registrants||[]).sort((a,b)=>(a.name||'').localeCompare(b.name||'')); manageList.innerHTML=rows.map(r=>`<div class="rounded-xl border p-3 bg-white" data-key="${r.key}"><div class="font-semibold">${r.name} <span class="text-xs text-slate-500">(${r.email||''})</span></div><div class="text-xs text-slate-600">Year ${r.yearJoined||''} • ${r.packageName||''} $${r.packageAmount||0}</div><div class="mt-2 flex gap-2"><button class="px-3 py-1 rounded border bg-white text-sm" onclick="adminDelete('${r.key}')">Delete</button></div></div>`).join(''); }catch(e){ manageList.innerHTML='Unable to load registrants.'; } }
-      window.adminDelete=async (key)=>{ if(!confirm('Delete this registration?')) return; const r=await fetch('/.netlify/functions/delete_registrant',{ method:'POST', headers:{'Content-Type':'application/json','x-admin-key':adminKey()}, body:JSON.stringify({key}) }); if(!r.ok){ alert('Delete failed'); return; } await loadManageList(); try{ document.getElementById('refreshBtn')?.click(); }catch{} };
-      manageBtn?.addEventListener('click', loadManageList);
     }
   })();
   </script>
