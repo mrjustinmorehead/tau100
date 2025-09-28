@@ -1,64 +1,56 @@
-// netlify/functions/_common.cjs
-// Blobs-backed common helpers matching previous calling pattern used by your site.
-// Exposes: json, bad, auth, uid, stores.{registrants,pending}() -> {getJSON(), setJSON(), list()}
-
-const { createClient } = require('@netlify/blobs');
-
-function getClient() {
-  const siteID = process.env.TAU_SITE_ID || process.env.SITE_ID;
-  const token  = process.env.TAU_BLOBS_TOKEN || process.env.ADMIN_KEY;
-  if (!siteID || !token) {
-    throw new Error("Missing TAU_SITE_ID or TAU_BLOBS_TOKEN environment variables");
-  }
-  return createClient({ siteID, token });
-}
+// Runtime-bound Netlify Blobs helper (no tokens/siteID needed in production)
+const { getStore } = require('@netlify/blobs');
 
 // JSON helpers
 function json(status, body) {
   return {
     statusCode: status,
-    headers: { "content-type": "application/json" },
+    headers: { 'content-type': 'application/json' },
     body: JSON.stringify(body),
   };
 }
-function bad(status, msg) {
-  return json(status || 400, { ok: false, error: msg || "error" });
+function bad(a, b) {
+  const status = typeof a === 'number' ? a : 400;
+  const msg = typeof a === 'number' ? b : a;
+  return json(status, { ok: false, error: msg || 'error' });
 }
-
-// Admin auth
 function auth(key) {
   const want = process.env.ADMIN_KEY;
   return !!want && key === want;
 }
-
-// Simple id
 function uid() {
   return Math.random().toString(36).slice(2, 10);
 }
-
-// Store wrappers that match earlier usage (no per-item keys exposed)
-function makeWrapped(storeName, keyName) {
-  const client = getClient();
-  const store  = client.store(storeName);
+function wrapStore(name, primaryKey = 'all') {
+  const store = getStore(name);
   return {
     async getJSON() {
-      const data = await store.getJSON(keyName);
-      return Array.isArray(data) ? data : (data && data.items ? data.items : []) || [];
+      let arr = await store.getJSON(primaryKey);
+      if (Array.isArray(arr)) return arr;
+      const legacy = await store.getJSON('registrants');
+      if (Array.isArray(legacy)) return legacy;
+      try {
+        const listing = await store.list();
+        for (const it of listing || []) {
+          if (it?.key && /\.json$/i.test(it.key)) {
+            const data = await store.getJSON(it.key);
+            if (Array.isArray(data)) return data;
+          }
+        }
+      } catch (_) {}
+      return [];
     },
     async setJSON(list) {
-      await store.setJSON(keyName, Array.isArray(list) ? list : []);
+      await store.setJSON(primaryKey, Array.isArray(list) ? list : []);
       return true;
     },
     async list() {
-      // low-level list of objects in the store (not usually used by your handlers)
       try { return await store.list(); } catch { return []; }
-    }
+    },
   };
 }
-
 const stores = {
-  async registrants() { return makeWrapped('registrants', 'all'); },
-  async pending()     { return makeWrapped('pending', 'all'); }
+  async registrants() { return wrapStore('registrants', 'all'); },
+  async pending()     { return wrapStore('pending', 'all'); }
 };
-
 module.exports = { json, bad, auth, uid, stores };
