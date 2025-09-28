@@ -11,7 +11,6 @@ exports.handler = async (event) => {
     const idx = r.findIndex(x => x.key === key);
     if (idx === -1) return c.bad(404, 'not found');
 
-    // soft-delete to avoid shrinking history
     r[idx].deleted = true;
     r[idx].deletedAt = new Date().toISOString();
     await regs.setJSON(r);

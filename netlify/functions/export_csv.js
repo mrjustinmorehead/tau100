@@ -7,18 +7,7 @@ exports.handler = async (event) => {
     const arr = (await regs.getJSON()).filter(x=>!x.deleted);
     const cols = ['key','name','email','phone','yearJoined','tshirtSize','packageName','packageAmount','paid','createdAt','confirmedAt'];
     const lines = [cols.join(',')];
-    for(const r of arr){
-      lines.push(cols.map(k=>csvEscape(r[k])).join(','));
-    }
-    return {
-      statusCode: 200,
-      headers: {
-        'content-type': 'text/csv',
-        'content-disposition': 'attachment; filename=registrants.csv'
-      },
-      body: lines.join('\n')
-    };
-  } catch (e) {
-    return c.bad(500, String(e && e.message || e));
-  }
+    for(const r of arr){ lines.push(cols.map(k=>csvEscape(r[k])).join(',')); }
+    return { statusCode: 200, headers: { 'content-type': 'text/csv', 'content-disposition': 'attachment; filename=registrants.csv' }, body: lines.join('\n') };
+  } catch (e) { return c.bad(500, String(e && e.message || e)); }
 };

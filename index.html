@@ -21,6 +21,7 @@
       .tiers-scroll { display:grid; overflow:visible; grid-template-columns: repeat(3, 1fr); }
       .tiers-scroll > label { min-width: auto; }
     }
+    .btn { display:inline-block; padding:.625rem 1rem; border-radius:.75rem; border:1px solid var(--sigma-gray); background:#fff; }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-900">
@@ -222,11 +223,8 @@
           </select>
         </div>
 
-        <!-- Honeypot -->
-        <div class="hidden" style="display:none!important;">
-          <label>Website</label>
-          <input name="website" tabindex="-1" autocomplete="off" />
-        </div>
+        <!-- Honeypot removed at backend; no-op here -->
+        <div class="hidden" aria-hidden="true"><label>Middle</label><input name="middleInitial" tabindex="-1" autocomplete="off" /></div>
 
         <!-- Public roster opt-in -->
         <label class="flex items-center gap-2 md:col-span-2 text-sm">
@@ -241,7 +239,7 @@
           <div class="text-sm text-slate-600">Remaining proceeds support current undergraduate brothers.</div>
           <button type="submit" id="submitBtn" class="px-5 py-3 bg-[var(--pbs-royal)] hover:bg-[var(--pbs-royal-dark)] text-white rounded-xl shadow font-semibold">Continue</button>
         </div>
-        <p id="formMsg" class="md:col-span-2 text-sm text-slate-600"></p>
+        <p id="formMsg" class="md:col-span-2 text-sm text-red-700"></p>
       </form>
 
       <!-- Confirmation panel (shown after submit) -->
@@ -347,9 +345,9 @@
 
       // Tier binding
       const tierSummary=document.getElementById('tierSummary');
-      function currentTier(){ const c=document.querySelector('input[name=\"tier\"]:checked'); if(!c) return {amount:100,name:\"Centennial Sponsorship\"}; const [a,n]=c.value.split('|'); return {amount:Number(a||100), name:n||\"Centennial Sponsorship\"}; }
+      function currentTier(){ const c=document.querySelector('input[name="tier"]:checked'); if(!c) return {amount:100,name:"Centennial Sponsorship"}; const [a,n]=c.value.split('|'); return {amount:Number(a||100), name:n||"Centennial Sponsorship"}; }
       function updateSummary(){ const t=currentTier(); if(tierSummary) tierSummary.innerHTML='Selected: <strong>$'+t.amount+' – '+t.name+'</strong>'; }
-      document.querySelectorAll('input[name=\"tier\"]').forEach(r=>r.addEventListener('change',updateSummary)); updateSummary();
+      document.querySelectorAll('input[name="tier"]').forEach(r=>r.addEventListener('change',updateSummary)); updateSummary();
 
       // Roster
       const rosterWrap=document.getElementById('rosterWrap'); const refreshBtn=document.getElementById('refreshBtn');
@@ -358,28 +356,28 @@
         if(!rosterWrap) return;
         const g=groupByDecade(list);
         const decades=Object.keys(g).sort((a,b)=>parseInt(b)-parseInt(a));
-        if(!decades.length){ rosterWrap.innerHTML='<div class=\"text-slate-600\">No registrations yet.</div>'; return; }
+        if(!decades.length){ rosterWrap.innerHTML='<div class="text-slate-600">No registrations yet.</div>'; return; }
         rosterWrap.innerHTML='';
         for(const d of decades){
           const years=Object.keys(g[d]).map(Number).sort((a,b)=>a-b);
           const col=document.createElement('div');
           col.className='bg-white rounded-2xl p-6 ring-1 ring-[var(--sigma-gray)] card';
-          col.innerHTML='<h3 class=\"text-xl font-bold\">'+d+'</h3>';
+          col.innerHTML='<h3 class="text-xl font-bold">'+d+'</h3>';
           for(const y of years){
-            const items=g[d][y].sort((a,b)=>(a.name||'').localeCompare(b.name||'')).map(p=>'<li class=\"py-1 flex gap-2 items-center\"><span class=\"font-medium\">'+(p.name||'')+'</span> <span class=\"text-xs text-slate-500\">('+y+(p.tshirtSize?', '+p.tshirtSize:'')+')</span></li>').join('');
-            col.insertAdjacentHTML('beforeend','<div class=\"mt-4\"><div class=\"text-sm font-semibold\">'+y+'</div><ul class=\"mt-1 text-sm\">'+items+'</ul></div>');
+            const items=g[d][y].sort((a,b)=>(a.name||'').localeCompare(b.name||'')).map(p=>'<li class="py-1 flex gap-2 items-center"><span class="font-medium">'+(p.name||'')+'</span> <span class="text-xs text-slate-500">('+y+(p.tshirtSize?', '+p.tshirtSize:'')+')</span></li>').join('');
+            col.insertAdjacentHTML('beforeend','<div class="mt-4"><div class="text-sm font-semibold">'+y+'</div><ul class="mt-1 text-sm">'+items+'</ul></div>');
           }
           rosterWrap.appendChild(col);
         }
       }
       async function loadRoster(){
-        if(!rosterWrap) return; rosterWrap.innerHTML='<div class=\"text-slate-600\">Loading roster…</div>';
+        if(!rosterWrap) return; rosterWrap.innerHTML='<div class="text-slate-600">Loading roster…</div>';
         try{
           const r=await fetch('/.netlify/functions/list_registrants',{ headers:{'cache-control':'no-cache'} });
           const j=await r.json();
           renderRoster(j.registrants||[]);
         }catch(e){
-          rosterWrap.innerHTML='<div class=\"text-slate-600\">Unable to load roster.</div>';
+          rosterWrap.innerHTML='<div class="text-slate-600">Unable to load roster.</div>';
           console.error('Roster load failed:', e);
         }
       }
@@ -398,20 +396,22 @@
       }
 
       form?.addEventListener('submit', async (e)=>{
-        e.preventDefault(); if(formMsg) formMsg.textContent='';
+        e.preventDefault(); if(formMsg) formMsg.textContent='Submitting…';
         const t=currentTier(); if(payAmount) payAmount.textContent='$'+t.amount;
         const data=new FormData(form);
-        const payload={ name:data.get('name'), email:data.get('email'), phone:data.get('phone'), yearJoined:Number(data.get('yearJoined')), tshirtSize:data.get('tshirtSize'), website:data.get('website'), optInPublic:data.get('optInPublic')==='on', packageName:t.name, packageAmount:t.amount };
+        const payload={ name:data.get('name'), email:data.get('email'), phone:data.get('phone'), yearJoined:Number(data.get('yearJoined')), tshirtSize:data.get('tshirtSize'), optInPublic:data.get('optInPublic')==='on', packageName:t.name, packageAmount:t.amount };
         try{
           const r=await fetch('/.netlify/functions/submit_manual_registration',{ method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) });
-          if(!r.ok){ const txt=await r.text(); throw new Error('submit failed: '+txt); }
-          const j=await r.json();
+          const text=await r.text();
+          if(!r.ok){ formMsg.textContent='Submit failed: '+text; return; }
+          let j={}; try{ j=JSON.parse(text);}catch{ formMsg.textContent='Submit response not JSON: '+text; return; }
           if (paymentCodeEl) paymentCodeEl.textContent=j.paymentCode||'UNKNOWN';
           if (confirmLink) confirmLink.href=j.confirmUrl||'#';
           confirmPanel?.classList.remove('hidden');
           confirmPanel?.scrollIntoView({behavior:'smooth', block:'center'});
+          formMsg.textContent='';
         }catch(err){
-          if(formMsg) formMsg.textContent='Something went wrong. Please try again.';
+          if(formMsg) formMsg.textContent='Error: '+err.message;
           console.error('Submit error:', err);
         }
       });
@@ -439,7 +439,15 @@
         const r=await fetch('/.netlify/functions/list_pending', { headers:{'x-admin-key':adminKey()} });
         if(!r.ok){ pendingList.innerHTML='Unauthorized or error'; return; }
         const j=await r.json();
-        pendingList.innerHTML=(j.items||[]).map(p=>`<div class="rounded-xl border p-3 bg-white"><div class="font-semibold">${p.name} <span class="text-xs text-slate-500">(${p.packageAmount ? '$'+p.packageAmount : ''} ${p.packageName||''})</span></div><div class="text-xs text-slate-600">${p.email} • ${p.phone}</div><div class="text-xs text-slate-600">Year ${p.yearJoined} • Size ${p.tshirtSize||''}</div><div class="mt-2 flex gap-2"><button onclick="approve('${p.key}')" class="px-3 py-1 rounded border bg-white text-sm">Approve</button><button onclick="deny('${p.key}')" class="px-3 py-1 rounded border bg-white text-sm">Deny</button></div></div>`).join('');
+        pendingList.innerHTML=(j.items||[]).map(p=>`<div class="rounded-xl border p-3 bg-white">
+          <div class="font-semibold">${p.name} <span class="text-xs text-slate-500">(${p.packageAmount ? '$'+p.packageAmount : ''} ${p.packageName||''})</span></div>
+          <div class="text-xs text-slate-600">${p.email} • ${p.phone}</div>
+          <div class="text-xs text-slate-600">Year ${p.yearJoined} • Size ${p.tshirtSize||''}</div>
+          <div class="mt-2 flex gap-2">
+            <button onclick="approve('${p.key}')" class="px-3 py-1 rounded border bg-white text-sm">Approve</button>
+            <button onclick="deny('${p.key}')" class="px-3 py-1 rounded border bg-white text-sm">Deny</button>
+          </div>
+        </div>`).join('');
       });
       window.approve = async (key)=>{ const r=await fetch('/.netlify/functions/approve_pending', { method:'POST', headers:{'Content-Type':'application/json','x-admin-key':adminKey()}, body:JSON.stringify({key}) }); if(r.ok){ alert('Approved'); loadRoster(); pendingBtn.click(); } else alert('Error'); };
       window.deny = async (key)=>{ const r=await fetch('/.netlify/functions/deny_pending', { method:'POST', headers:{'Content-Type':'application/json','x-admin-key':adminKey()}, body:JSON.stringify({key}) }); if(r.ok){ alert('Removed'); pendingBtn.click(); } else alert('Error'); };
@@ -449,7 +457,14 @@
         manageList.innerHTML='Loading…';
         const r=await fetch('/.netlify/functions/list_registrants');
         const j=await r.json();
-        manageList.innerHTML=(j.registrants||[]).sort((a,b)=>(a.name||'').localeCompare(b.name||'')).map(p=>`<div class="rounded-xl border p-3 bg-white"><div class="font-semibold">${p.name} <span class="text-xs text-slate-500">(${p.email||''})</span></div><div class="text-xs text-slate-600">${p.phone||''}</div><div class="text-xs text-slate-600">Year ${p.yearJoined||''}</div><div class="mt-2 flex gap-2"><button onclick="adminDelete('${p.key||''}')" class="px-3 py-1 rounded border bg-white text-sm">Delete</button></div></div>`).join('');
+        manageList.innerHTML=(j.registrants||[]).sort((a,b)=>(a.name||'').localeCompare(b.name||'')).map(p=>`<div class="rounded-xl border p-3 bg-white">
+          <div class="font-semibold">${p.name} <span class="text-xs text-slate-500">(${p.email||''})</span></div>
+          <div class="text-xs text-slate-600">${p.phone||''}</div>
+          <div class="text-xs text-slate-600">Year ${p.yearJoined||''}</div>
+          <div class="mt-2 flex gap-2">
+            <button onclick="adminDelete('${p.key||''}')" class="px-3 py-1 rounded border bg-white text-sm">Delete</button>
+          </div>
+        </div>`).join('');
       });
       window.adminDelete = async (key)=>{
         if(!key){ alert('Missing key'); return; }

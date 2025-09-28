@@ -1,11 +1,10 @@
 const c = require('./_common.cjs');
-
 exports.handler = async (event) => {
   try {
     if (event.httpMethod !== 'POST') return c.bad(405, 'POST only');
-    const input = JSON.parse(event.body || '{}');
+    let input = {};
+    try { input = JSON.parse(event.body || '{}'); } catch { return c.bad(400, 'invalid JSON'); }
 
-    // basic validation
     const name = (input.name || '').trim();
     const email = (input.email || '').trim();
     const phone = (input.phone || '').trim();
@@ -13,13 +12,12 @@ exports.handler = async (event) => {
     const packageName = input.packageName || 'Centennial Sponsorship';
     const packageAmount = Number(input.packageAmount || 100);
     const tshirtSize = input.tshirtSize || '';
-    const optInPublic = !!input.optInPublic;
+    const optInPublic = input.optInPublic === true;
 
     if (!name || !email || !phone || !yearJoined) return c.bad(400, 'missing fields');
-    if (input.website) return c.bad(400, 'spam');
 
     const pending = await c.stores.pending();
-    const list = await pending.getJSON(); // always array
+    const list = await pending.getJSON();
     const key = c.uid();
     const paymentCode = 'TAU-' + c.uid().toUpperCase();
 
@@ -32,7 +30,6 @@ exports.handler = async (event) => {
     await pending.setJSON(list);
 
     const confirmUrl = '/.netlify/functions/confirm_payment?code=' + encodeURIComponent(paymentCode);
-
     return c.json(200, { ok: true, paymentCode, confirmUrl });
   } catch (e) {
     return c.bad(500, String(e && e.message || e));

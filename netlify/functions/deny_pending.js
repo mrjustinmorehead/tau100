@@ -11,7 +11,6 @@ exports.handler = async (event) => {
     const idx = p.findIndex(x => x.key === key);
     if (idx !== -1) p.splice(idx, 1);
     await pend.setJSON(p);
-
     return c.json(200, { ok: true });
   } catch (e) {
     return c.bad(500, String(e && e.message || e));
