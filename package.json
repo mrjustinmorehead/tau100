@@ -1,4 +1,9 @@
 {
-  "name": "tau100",
-  "private": true
+  "name": "tau100-dropin",
+  "version": "1.0.0",
+  "private": true,
+  "license": "MIT",
+  "dependencies": {
+    "@netlify/blobs": "^6.4.0"
+  }
 }
