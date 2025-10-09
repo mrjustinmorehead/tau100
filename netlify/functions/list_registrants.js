@@ -1,5 +1,13 @@
-const c = require('./_common.cjs');
-exports.handler = async () => {
-  try { const s=await c.stores.registrants(); const a=await s.getJSON(); return c.json(200,{ok:true,registrants:(a||[]).filter(x=>!x.deleted)}); }
-  catch(e){ return c.bad(500,String(e&&e.message||e)); }
+
+const { json, stores } = require("./_common.cjs");
+module.exports.handler = async () => {
+  const regs = stores.registrants();
+  const keys = await regs.list();
+  const registrants = [];
+  for (const k of keys.blobs) {
+    const j = await regs.getJSON(k.key);
+    if (j) registrants.push(j);
+  }
+  registrants.sort((a,b)=> new Date(b.confirmedAt||b.createdAt||0) - new Date(a.confirmedAt||a.createdAt||0));
+  return json({ registrants });
 };

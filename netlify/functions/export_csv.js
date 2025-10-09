@@ -1,13 +1,30 @@
-const c = require('./_common.cjs');
-function csvEscape(s){ if(s==null) return ''; s=String(s); if(/[",\n]/.test(s)) return '"' + s.replace(/"/g,'""') + '"'; return s; }
-exports.handler = async (event) => {
-  try {
-    if (!c.auth(event.headers['x-admin-key'])) return c.bad(401, 'unauthorized');
-    const regs = await c.stores.registrants();
-    const arr = (await regs.getJSON()).filter(x=>!x.deleted);
-    const cols = ['key','name','email','phone','yearJoined','tshirtSize','packageName','packageAmount','paid','createdAt','confirmedAt'];
-    const lines = [cols.join(',')];
-    for(const r of arr){ lines.push(cols.map(k=>csvEscape(r[k])).join(',')); }
-    return { statusCode: 200, headers: { 'content-type': 'text/csv', 'content-disposition': 'attachment; filename=registrants.csv' }, body: lines.join('\n') };
-  } catch (e) { return c.bad(500, String(e && e.message || e)); }
+
+const { bad, auth, stores } = require("./_common.cjs");
+module.exports.handler = async (event) => {
+  if (!auth(event)) return bad("Unauthorized", 401);
+  const regs = stores.registrants();
+  const keys = await regs.list();
+  const rows = [
+    ["Generated At", new Date().toISOString()].join(","),
+    ["Name","Email","Phone","Year","TshirtSize","Package Name","Amount","Verification","Confirmed At","Created At"].join(",")
+  ];
+  for (const k of keys.blobs) {
+    const r = await regs.getJSON(k.key);
+    if (!r) continue;
+    const line = [
+      (r.name||"").replace(/,/g," "),
+      (r.email||"").replace(/,/g," "),
+      (r.phone||"").replace(/,/g," "),
+      r.yearJoined||"",
+      r.tshirtSize||"",
+      (r.packageName||"").replace(/,/g," "),
+      r.packageAmount||"",
+      r.verification||"",
+      r.confirmedAt||"",
+      r.createdAt||""
+    ].join(",");
+    rows.push(line);
+  }
+  const body = rows.join("\n");
+  return { statusCode:200, headers:{ "Content-Type":"text/csv", "Content-Disposition": "attachment; filename=\"registrants.csv\"" }, body };
 };

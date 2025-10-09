@@ -1,65 +1,71 @@
-// _common.cjs — Blobs hotfix: prefer explicit creds if present, else runtime creds.
-const { getStore } = require('@netlify/blobs');
 
-function json(status, body) {
-  return { statusCode: status, headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) };
-}
-function bad(a, b) { const status = typeof a === 'number' ? a : 400; const msg = typeof a === 'number' ? b : a; return json(status, { ok:false, error: msg||'error' }); }
-function auth(key) { const want = process.env.ADMIN_KEY; return !!want && key === want; }
-function uid() { return Math.random().toString(36).slice(2, 10); }
+// _common.cjs — Compatibility wrappers for Netlify Blobs across versions
+const crypto = require("crypto");
+const { getStore } = require("@netlify/blobs");
 
-function storeOptions() {
-  const siteID = process.env.TAU_SITE_ID || process.env.NETLIFY_SITE_ID || process.env.SITE_ID;
-  const token  = process.env.TAU_BLOBS_TOKEN || process.env.NETLIFY_BLOBS_TOKEN || process.env.BLOBS_TOKEN;
-  const opts = {};
-  if (siteID && token) { opts.siteID = siteID; opts.token = token; }
-  return opts;
-}
+const json = (body, code=200) => ({
+  statusCode: code,
+  headers:{ "Content-Type":"application/json" },
+  body: JSON.stringify(body)
+});
+const bad  = (msg="Bad Request", code=400) => ({ statusCode: code, body: msg });
+const auth = (event) => {
+  const key = event.headers && (event.headers["x-admin-key"] || event.headers["X-Admin-Key"]);
+  return !!(process.env.ADMIN_KEY && key && key === process.env.ADMIN_KEY);
+};
+const uid = () => crypto.randomBytes(6).toString("hex");
+const paymentCode = () => "TAU-" + Math.random().toString(36).slice(2,8).toUpperCase();
 
-function wrapStore(name, primaryKey='all') {
-  const opts = storeOptions();
-  const store = Object.keys(opts).length ? getStore(name, opts) : getStore(name);
-  return {
-    async getJSON() {
-      try {
-        let arr = await store.getJSON(primaryKey);
-        if (Array.isArray(arr)) return arr;
-      } catch (e) {
-        // If runtime creds aren't available and no explicit creds were provided, surface a clear error.
-        if (!Object.keys(storeOptions()).length) throw new Error('Netlify Blobs not configured (no runtime creds). Set TAU_SITE_ID and TAU_BLOBS_TOKEN.');
-      }
-      // legacy/fallback scan
-      try {
-        const legacy = await store.getJSON('registrants');
-        if (Array.isArray(legacy)) return legacy;
-      } catch {}
-      try {
-        const listing = await store.list();
-        for (const it of listing || []) {
-          if (it?.key && /\.json$/i.test(it.key)) {
-            const data = await store.getJSON(it.key);
-            if (Array.isArray(data)) return data;
-          }
-        }
-      } catch {}
-      return [];
-    },
-    async setJSON(list) {
-      const arr = Array.isArray(list) ? list : [];
-      try {
-        await store.setJSON(primaryKey, arr);
-        return true;
-      } catch (e) {
-        throw new Error('Blobs write failed. Ensure TAU_SITE_ID and TAU_BLOBS_TOKEN are set at Site → Settings → Environment variables.');
-      }
-    },
-    async list() { try { return await store.list(); } catch { return []; } },
+// Use object-form for getStore for maximum compatibility
+const useExplicit = (process.env.TAU_SITE_ID && process.env.TAU_BLOBS_TOKEN);
+const baseStoreFor = (name) => useExplicit
+  ? getStore({ name, siteID: process.env.TAU_SITE_ID, token: process.env.TAU_BLOBS_TOKEN })
+  : getStore({ name });
+
+// Wrap store with compatibility helpers (getJSON/setJSON across SDK versions)
+const wrapStore = (raw) => {
+  // list() may return array of strings or { blobs: [{ key, ... }] }
+  const listCompat = async (...args) => {
+    const res = await raw.list(...args);
+    if (Array.isArray(res)) return { blobs: res.map(key => ({ key })) };
+    if (res && Array.isArray(res.blobs)) return res;
+    return { blobs: [] };
   };
-}
 
-const stores = {
-  async registrants(){ return wrapStore('registrants','all'); },
-  async pending(){ return wrapStore('pending','all'); }
+  const getJsonCompat = async (key) => {
+    if (typeof raw.getJSON === "function") return raw.getJSON(key);
+    if (typeof raw.get === "function") return raw.get(key, { type: "json" });
+    throw new Error("Store get/getJSON not available");
+  };
+
+  const setJsonCompat = async (key, val) => {
+    if (typeof raw.setJSON === "function") return raw.setJSON(key, val);
+    if (typeof raw.set === "function") return raw.set(key, JSON.stringify(val), { contentType: "application/json" });
+    throw new Error("Store set/setJSON not available");
+  };
+
+  const delCompat = async (key) => {
+    if (typeof raw.delete === "function") return raw.delete(key);
+    if (typeof raw.remove === "function") return raw.remove(key);
+    throw new Error("Store delete/remove not available");
+  };
+
+  return {
+    list: listCompat,
+    getJSON: getJsonCompat,
+    setJSON: setJsonCompat,
+    delete: delCompat,
+    raw,
+  };
 };
 
-module.exports = { json, bad, auth, uid, stores };
+const storeFor = (name) => wrapStore(baseStoreFor(name));
+
+const stores = {
+  pending:     () => storeFor("pending"),
+  registrants: () => storeFor("registrants"),
+};
+
+const blobsMode = () => (useExplicit ? "getStore+opts" : "auto");
+
+module.exports = { json, bad, auth, uid, paymentCode, stores, blobsMode };

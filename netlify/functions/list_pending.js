@@ -1,11 +1,14 @@
-const c = require('./_common.cjs');
-exports.handler = async (event) => {
-  try {
-    if (!c.auth(event.headers['x-admin-key'])) return c.bad(401, 'unauthorized');
-    const store = await c.stores.pending();
-    const arr = await store.getJSON();
-    return c.json(200, { ok: true, items: arr });
-  } catch (e) {
-    return c.bad(500, String(e && e.message || e));
+
+const { json, bad, auth, stores } = require("./_common.cjs");
+module.exports.handler = async (event) => {
+  if (!auth(event)) return bad("Unauthorized", 401);
+  const store = stores.pending();
+  const keys = await store.list();
+  const items = [];
+  for (const k of keys.blobs) {
+    const j = await store.getJSON(k.key);
+    if (j) items.push({ key: k.key, ...j });
   }
+  items.sort((a,b)=> new Date(b.createdAt)-new Date(a.createdAt));
+  return json({ items });
 };
