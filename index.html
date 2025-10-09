@@ -334,6 +334,29 @@
         </div>
         <div id="pendingList" class="mt-4 grid md:grid-cols-2 gap-4"></div>
         <pre id="totalsOut" class="mt-3 text-xs text-slate-600"></pre>
+        <!-- Minimal manage-registrants UI (stays inside Admin) -->
+<div class="mt-6">
+  <button id="manageBtn" class="px-3 py-2 rounded border bg-white">Manage Registrants</button>
+  <div id="manageWrap" class="mt-3 hidden">
+    <div class="text-xs text-slate-500">Tip: “Soft delete” hides from roster (reversible). “Hard delete” removes permanently.</div>
+    <div class="overflow-x-auto mt-2">
+      <table class="min-w-full text-sm">
+        <thead>
+          <tr class="text-left border-b">
+            <th class="py-2 pr-3">Name</th>
+            <th class="py-2 pr-3">Email</th>
+            <th class="py-2 pr-3">Year</th>
+            <th class="py-2 pr-3">Pkg</th>
+            <th class="py-2 pr-3">Deleted</th>
+            <th class="py-2">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="manageBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
       </details>
 
       <div class="mt-6 text-slate-500">© 2025 Tau Chapter Centennial Homecoming</div>
