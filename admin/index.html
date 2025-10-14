@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Registrants Admin</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+  <div class="max-w-6xl mx-auto p-6">
+    <header class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
+      <h1 class="text-2xl font-semibold">Registrants Admin</h1>
+      <div class="flex gap-2 items-center">
+        <input id="adminKey" type="password" placeholder="Admin Key" class="px-3 py-2 rounded border" />
+        <button id="refreshAllBtn" class="px-3 py-2 rounded bg-gray-800 text-white">Refresh All</button>
+        <button id="exportBtn" class="px-3 py-2 rounded bg-blue-600 text-white">Export CSV</button>
+      </div>
+    </header>
+
+    <div id="status" class="mb-4 text-sm text-gray-600"></div>
+
+    <section class="mb-10">
+      <h2 class="text-lg font-semibold mb-3">Active Registrants</h2>
+      <div class="overflow-x-auto bg-white rounded-xl shadow">
+        <table class="min-w-full text-sm">
+          <thead class="bg-gray-100">
+            <tr>
+              <th class="text-left p-3">Name</th>
+              <th class="text-left p-3">Email</th>
+              <th class="text-left p-3">Phone</th>
+              <th class="text-left p-3">Package</th>
+              <th class="text-left p-3">Amount</th>
+              <th class="text-left p-3 whitespace-nowrap">Created</th>
+              <th class="text-left p-3">Key</th>
+              <th class="text-left p-3">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="rowsActive"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="text-lg font-semibold mb-3">Trash</h2>
+      <div class="overflow-x-auto bg-white rounded-xl shadow">
+        <table class="min-w-full text-sm">
+          <thead class="bg-gray-100">
+            <tr>
+              <th class="text-left p-3">Name</th>
+              <th class="text-left p-3">Email</th>
+              <th class="text-left p-3">Package</th>
+              <th class="text-left p-3 whitespace-nowrap">Deleted At</th>
+              <th class="text-left p-3">Key</th>
+              <th class="text-left p-3">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="rowsTrash"></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+<script>
+  const statusEl = document.getElementById('status');
+  const adminKeyEl = document.getElementById('adminKey');
+  const rowsActive = document.getElementById('rowsActive');
+  const rowsTrash = document.getElementById('rowsTrash');
+  const refreshAllBtn = document.getElementById('refreshAllBtn');
+  const exportBtn = document.getElementById('exportBtn');
+
+  function setStatus(msg){ statusEl.textContent = msg || ''; }
+
+  refreshAllBtn.addEventListener('click', () => { loadActive(); loadTrash(); });
+  exportBtn.addEventListener('click', exportCSV);
+
+  function hdrs() {
+    return { 'Content-Type':'application/json', 'x-admin-key': adminKeyEl.value || '' };
+  }
+
+  async function exportCSV() {
+    setStatus('Exporting CSV…');
+    try {
+      const res = await fetch('/.netlify/functions/admin_export_registrants_csv', {
+        headers: { 'x-admin-key': adminKeyEl.value || '' }
+      });
+      if (!res.ok) {
+        const txt = await res.text();
+        throw new Error(txt || `HTTP ${res.status}`);
+      }
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'registrants.csv';
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(() => {
+        URL.revokeObjectURL(url);
+        a.remove();
+      }, 0);
+      setStatus('CSV downloaded.');
+    } catch (e) {
+      setStatus('Error exporting CSV: ' + e.message);
+    }
+  }
+
+  async function loadActive(){
+    setStatus('Loading active registrants…');
+    rowsActive.innerHTML = '';
+    try {
+      const res = await fetch('/.netlify/functions/admin_list_registrants', { headers: hdrs() });
+      const json = await res.json();
+      if (!res.ok || !json.ok) throw new Error(json.error || `HTTP ${res.status}`);
+
+      if (!json.items.length) { setStatus('No active registrants.'); return; }
+      setStatus(`Loaded ${json.items.length} active registrant(s).`);
+
+      for (const item of json.items) {
+        const tr = document.createElement('tr');
+        tr.className = 'border-t';
+        tr.innerHTML = `
+          <td class="p-3">${escapeHtml(item.name || '')}</td>
+          <td class="p-3">${escapeHtml(item.email || '')}</td>
+          <td class="p-3">${escapeHtml(item.phone || '')}</td>
+          <td class="p-3">${escapeHtml(item.packageName || '')}</td>
+          <td class="p-3">$${Number(item.packageAmount || 0).toFixed(2)}</td>
+          <td class="p-3 whitespace-nowrap">${escapeHtml(item.createdAt || '')}</td>
+          <td class="p-3 text-[11px]">${escapeHtml(item.key)}</td>
+          <td class="p-3"></td>
+        `;
+        const actions = tr.lastElementChild;
+        const delBtn = document.createElement('button');
+        delBtn.className = 'px-2 py-1 rounded bg-red-600 text-white';
+        delBtn.textContent = 'Delete';
+        delBtn.onclick = () => deleteReg(item.key);
+        actions.appendChild(delBtn);
+        rowsActive.appendChild(tr);
+      }
+    } catch (e) {
+      setStatus('Error loading active registrants: ' + e.message);
+    }
+  }
+
+  async function loadTrash(){
+    rowsTrash.innerHTML = '';
+    try {
+      const res = await fetch('/.netlify/functions/admin_list_trash', { headers: hdrs() });
+      const json = await res.json();
+      if (!res.ok || !json.ok) throw new Error(json.error || `HTTP ${res.status}`);
+
+      for (const item of json.items) {
+        const tr = document.createElement('tr');
+        tr.className = 'border-t';
+        tr.innerHTML = `
+          <td class="p-3">${escapeHtml(item.name || '')}</td>
+          <td class="p-3">${escapeHtml(item.email || '')}</td>
+          <td class="p-3">${escapeHtml(item.packageName || '')}</td>
+          <td class="p-3 whitespace-nowrap">${escapeHtml(item.deletedAt || '')}</td>
+          <td class="p-3 text-[11px]">${escapeHtml(item.key)}</td>
+          <td class="p-3"></td>
+        `;
+        const actions = tr.lastElementChild;
+        const restoreBtn = document.createElement('button');
+        restoreBtn.className = 'px-2 py-1 rounded bg-green-600 text-white mr-2';
+        restoreBtn.textContent = 'Restore';
+        restoreBtn.onclick = () => restore(item.key);
+        const purgeBtn = document.createElement('button');
+        purgeBtn.className = 'px-2 py-1 rounded bg-red-600 text-white';
+        purgeBtn.textContent = 'Purge';
+        purgeBtn.onclick = () => purge(item.key);
+        actions.appendChild(restoreBtn);
+        actions.appendChild(purgeBtn);
+        rowsTrash.appendChild(tr);
+      }
+    } catch (e) {
+      setStatus('Error loading trash: ' + e.message);
+    }
+  }
+
+  async function deleteReg(key){
+    if (!confirm('Delete this registrant? It will move to Trash.')) return;
+    setStatus('Deleting…');
+    try {
+      const res = await fetch('/.netlify/functions/admin_delete_registrant', {
+        method: 'POST',
+        headers: hdrs(),
+        body: JSON.stringify({ key, softDelete:true })
+      });
+      const json = await res.json();
+      if (!res.ok || !json.ok) throw new Error(json.error || `HTTP ${res.status}`);
+      setStatus('Deleted (moved to Trash).');
+      loadActive(); loadTrash();
+    } catch (e) {
+      setStatus('Error deleting: ' + e.message);
+    }
+  }
+
+  async function restore(trashKey){
+    if (!confirm('Restore this registrant?')) return;
+    setStatus('Restoring…');
+    try {
+      const res = await fetch('/.netlify/functions/admin_restore_registrant', {
+        method: 'POST',
+        headers: hdrs(),
+        body: JSON.stringify({ trashKey })
+      });
+      const json = await res.json();
+      if (!res.ok || !json.ok) throw new Error(json.error || `HTTP ${res.status}`);
+      setStatus('Restored.');
+      loadActive(); loadTrash();
+    } catch (e) {
+      setStatus('Error restoring: ' + e.message);
+    }
+  }
+
+  async function purge(trashKey){
+    if (!confirm('Permanently delete this trash item? This cannot be undone.')) return;
+    setStatus('Purging…');
+    try {
+      const res = await fetch('/.netlify/functions/admin_purge_trash', {
+        method: 'POST',
+        headers: hdrs(),
+        body: JSON.stringify({ trashKey })
+      });
+      const json = await res.json();
+      if (!res.ok || !json.ok) throw new Error(json.error || `HTTP ${res.status}`);
+      setStatus('Purged.');
+      loadActive(); loadTrash();
+    } catch (e) {
+      setStatus('Error purging: ' + e.message);
+    }
+  }
+
+  function escapeHtml(v){
+    return String(v || '')
+      .replace(/&/g, '&amp;')
+      .replace(/<//g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+</script>
+</body>
+</html>
