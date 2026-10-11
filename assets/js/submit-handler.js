@@ -29,7 +29,7 @@
 
   function getTier(){
     const chosen = document.querySelector('input[name="tier"]:checked');
-    if (!chosen) return { amount: 100, name: 'Centennial Sponsorship' };
+    if (!chosen) return { amount: 100, name: 'Homecoming Sponsorship' };
     const [amount, name] = chosen.value.split('|');
     return { amount: Number(amount), name };
   }
@@ -65,14 +65,13 @@
         email: fd.get('email')?.trim(),
         phone: fd.get('phone')?.trim(),
         yearJoined: Number(fd.get('yearJoined')),
-        tshirtSize: fd.get('tshirtSize'),
         website: fd.get('website'),
         optInPublic: fd.get('optInPublic') === 'on',
         packageName: t.name,
         packageAmount: t.amount
       };
 
-      for (const k of ['name','email','phone','yearJoined','tshirtSize']) {
+      for (const k of ['name','email','phone','yearJoined']) {
         if (!payload[k]) { setStatus('Missing ' + k, true); return; }
       }
 
@@ -97,7 +96,7 @@
 
       const code = data.paymentCode || 'PENDING';
       const amount = Number(data.packageAmount || t.amount || 100);
-      const note = `Tau100 ${code}`;
+      const note = `Tau2026 ${code}`;
 
       if (paymentCodeEl) paymentCodeEl.textContent = code;
       if (confirmLink)   confirmLink.href = data.confirmUrl || '#';
