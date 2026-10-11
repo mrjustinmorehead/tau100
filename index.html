@@ -21,11 +21,51 @@
       .tiers-scroll { display:grid; overflow:visible; grid-template-columns: repeat(3, 1fr); }
       .tiers-scroll > label { min-width: auto; }
     }
+
+    body {font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; background:#f4f6fa;}
+    .preview-strip {text-align:center;padding:9px 16px;background:#dfe9f8;color:#173d75;font-size:11px;letter-spacing:.13em;font-weight:700;}
+    .homecoming-hero {background:radial-gradient(ellipse at 90% 10%,#285daf 0,transparent 52%),#12376e;color:white;position:relative;overflow:hidden;}
+    .homecoming-hero:after {content:'Τ';position:absolute;right:5%;top:55px;font-family:Georgia,serif;font-size:480px;line-height:1;color:rgba(255,255,255,.045);pointer-events:none;}
+    .hero-inner {max-width:1152px;margin:auto;padding:28px 24px 24px;position:relative;z-index:1;}
+    .hero-top {display:flex;justify-content:space-between;align-items:center;margin-bottom:54px;gap:15px;}
+    .brand {font-family:Georgia,serif;font-size:26px;font-weight:bold;display:flex;align-items:center;gap:14px;}
+    .brand span {font:700 11px/1.4 system-ui;letter-spacing:.18em;border-left:1px solid #7293c6;padding-left:14px;}
+    .hero-top a {font-size:12px;color:#dae7fb;}
+    .hero-kicker {font-size:11px;letter-spacing:.2em;font-weight:700;color:#b7d0f3;margin-bottom:14px;}
+    .homecoming-hero h1 {font-size:clamp(55px,8vw,94px);font-weight:800;line-height:.98;letter-spacing:-.065em;}
+    .homecoming-hero h1 em {font-family:Georgia,serif;font-weight:normal;letter-spacing:-.06em;}
+    .hero-sub {font-size:17px;color:#d2def1;margin-top:24px;}
+    .hero-actions {display:flex;align-items:center;gap:24px;margin:30px 0 44px;flex-wrap:wrap;}
+    .hero-cta {background:white;color:#153b73;border-radius:10px;padding:15px 20px;font-size:14px;font-weight:750;display:flex;gap:28px;}
+    .hero-note {font-size:12px;color:#bdcff0;}
+    .hero-bottom {display:flex;gap:28px;padding-top:20px;border-top:1px solid #5477ab;font-size:11px;letter-spacing:.04em;color:#d4e0f2;}
+    .hero-bottom .since {margin-left:auto;color:#a4bbdf;}
+    section {padding-top:36px!important;padding-bottom:36px!important;}
+    .section-kicker {font-size:10px;font-weight:800;color:#19468d;letter-spacing:.16em;margin-bottom:9px;}
+    .card {box-shadow:0 6px 20px rgba(19,45,83,.04);border:1px solid #e1e6ee;border-radius:18px!important;}
+    .tailgate-card {padding:26px!important;border-top:4px solid #19468d;}
+    .event-badges {display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 20px;}
+    .event-badges span {border:1px solid #d6e2f3;background:#edf3fc;color:#244d85;padding:7px 11px;border-radius:999px;font-size:11px;font-weight:650;}
+    .tailgate-cta {display:inline-block;background:#19468d;color:white;font-weight:700;font-size:13px;border-radius:9px;padding:12px 18px;margin:20px 0 0 18px;}
+    .friday-title {font-size:22px;font-weight:750;margin-top:36px;letter-spacing:-.03em;}
+    .friday-events {margin-top:15px!important;}
+    .friday-events article {display:flex;flex-direction:column;}
+    .friday-events a {margin-top:auto;padding-top:15px;align-self:flex-start;}
+    .friday-events article p:last-of-type {margin-bottom:20px;}
+    #register>div {border-top:4px solid #19468d;padding:28px;}
+    #registrationSummary {background:#edf3fc;border-radius:10px;padding:16px;color:#19468d;}
+    #headcount {background:#e9eff8;padding:20px 24px;border-radius:14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:19px;color:#153c74;}
+    .headcount-number {font-size:36px;font-weight:800;line-height:1;}
+    .headcount-detail {font-size:13px;font-weight:500;}
+    .sample-note {font-size:10px;color:#64748b;margin-left:auto;font-weight:500;}
+    #timeline h2 {font-size:24px;} #timeline .card {padding:18px;}
+    a:focus-visible,button:focus-visible,input:focus-visible {outline:3px solid #6ca3ee;outline-offset:3px;}
+    @media(max-width:640px) {.hero-inner{padding:22px 20px;} .hero-top{margin-bottom:36px}.hero-bottom{gap:14px;flex-wrap:wrap}.hero-bottom .since{margin-left:0}.hero-actions{gap:15px;margin-bottom:30px}.tailgate-card{padding:18px!important}.tailgate-cta{margin-left:0;display:block;text-align:center}.homecoming-hero:after{right:-70px;font-size:380px}body{padding-bottom:80px}.friday-title{margin-top:26px}}
   </style>
 </head>
 <body class="bg-slate-50 text-slate-900">
   <!-- Sticky mobile action bar -->
-  <div class="fixed bottom-0 inset-x-0 z-40 md:hidden">
+  <div class="mobile-bar fixed bottom-0 inset-x-0 z-40 md:hidden">
     <div class="mx-auto max-w-md">
       <div class="m-3 p-2 rounded-xl bg-white shadow-lg border border-[var(--sigma-gray)] flex gap-2">
         <a href="#register" class="flex-1 text-center px-4 py-3 rounded-lg bg-[var(--pbs-royal)] text-white font-semibold">Register</a>
@@ -34,59 +74,33 @@
     </div>
   </div>
 
-  <!-- HERO -->
-  <header class="relative bg-white/70 backdrop-blur ring-1 ring-[var(--sigma-gray)]">
-    <div class="relative max-w-6xl mx-auto px-4 py-12 sm:py-16">
-      <div class="flex items-center justify-between gap-4">
-        <div>
-          <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight">Tau Chapter Homecoming 2026</h1>
-          <p class="text-lg sm:text-xl mt-2 font-medium">October 30–31, 2026 • Brotherhood continues</p>
-          <p id="marquee" class="mt-2 text-[var(--pbs-royal)] font-semibold">Brotherhood</p>
-        </div>
-        <button id="darkToggle" class="hidden sm:inline-flex px-3 py-2 rounded-lg border bg-white focus-ring" aria-label="Toggle dark mode">🌙</button>
-      </div>
-      <div class="mt-6 flex flex-wrap items-center gap-3">
-        <a href="#register" class="px-5 py-3 bg-[var(--pbs-royal)] hover:bg-[var(--pbs-royal-dark)] text-white rounded-xl shadow font-semibold">Register</a>
-        <a href="#schedule" class="px-5 py-3 bg-white text-slate-900 rounded-xl shadow border border-[var(--sigma-gray)] font-semibold">See Schedule</a>
-        <a href="#donate" class="px-5 py-3 bg-white text-slate-900 rounded-xl shadow border border-[var(--sigma-gray)] font-semibold">Donate</a>
-      </div>
+  <div class="preview-strip">DESIGN PREVIEW · Your live website is unchanged</div>
+  <header class="homecoming-hero">
+    <div class="hero-inner">
+      <div class="hero-top"><span class="brand">ΦΒΣ <span>TAU CHAPTER</span></span><a href="#schedule">Weekend schedule ↗</a></div>
+      <p class="hero-kicker">LOUISVILLE · OCTOBER 30–31</p>
+      <h1>Come home<br>to <em>Tau.</em></h1>
+      <p class="hero-sub">Homecoming 2026. Same bond. New memories.</p>
+      <div class="hero-actions"><a class="hero-cta" href="#register">Register for the Tailgate <span>↗</span></a><span class="hero-note">October 31 · $25 per person</span></div>
+      <div class="hero-bottom"><span>Brotherhood.</span><span>Scholarship.</span><span>Service.</span><span class="since">Since 1925</span></div>
     </div>
   </header>
 
-  <!-- 100 Years of Tau -->
-  <section id="timeline" class="max-w-6xl mx-auto px-4 py-12">
-    <h2 class="text-2xl sm:text-3xl font-extrabold">Tau Chapter • Since 1925</h2>
-    <div class="mt-6 grid md:grid-cols-3 gap-6">
-      <figure class="card bg-white rounded-2xl p-6 ring-1 ring-[var(--sigma-gray)]">
-        <img src="assets/tau100-1.jpg" loading="lazy" alt="Brotherhood" class="rounded-xl w-full h-48 object-cover" width="640" height="384" />
-        <figcaption class="mt-3 text-sm text-slate-700"><strong>Brotherhood</strong> — A bond unlike any other.</figcaption>
-      </figure>
-      <figure class="card bg-white rounded-2xl p-6 ring-1 ring-[var(--sigma-gray)]">
-        <img src="assets/tau100-3.jpg" loading="lazy" alt="Scholarship" class="rounded-xl w-full h-48 object-cover" width="640" height="384" />
-        <figcaption class="mt-3 text-sm text-slate-700"><strong>Scholarship</strong> — A century of academic success.</figcaption>
-      </figure>
-      <figure class="card bg-white rounded-2xl p-6 ring-1 ring-[var(--sigma-gray)]">
-        <img src="assets/charter members.jpg" loading="lazy" alt="Service" class="rounded-xl w-full h-48 object-cover" width="640" height="384" />
-        <figcaption class="mt-3 text-sm text-slate-700"><strong>Service</strong> — Committed to servicing Louisville since 1925.</figcaption>
-      </figure>
-    </div>
-  </section>
-
   <!-- SCHEDULE -->
   <section id="schedule" class="max-w-6xl mx-auto px-4 py-12">
-    <h2 class="text-2xl sm:text-3xl font-extrabold">Homecoming Weekend</h2>
+    <p class="section-kicker">THE WEEKEND STARTS HERE</p><h2 class="text-2xl sm:text-3xl font-extrabold">One weekend. A lifelong bond.</h2>
     <p class="mt-2 text-slate-600">All times are Eastern (Louisville local time).</p>
-    <article class="card bg-white p-6 mt-6 ring-2 ring-[var(--pbs-royal)]">
+    <article class="card tailgate-card bg-white p-6 mt-6">
       <p class="text-[var(--pbs-royal)] font-bold">THE MAIN EVENT • SATURDAY, OCTOBER 31</p>
-      <h3 class="text-2xl font-bold mt-2">Tau Chapter Homecoming Tailgate</h3>
+      <h3 class="text-2xl font-bold mt-2">Tau Chapter Homecoming Tailgate</h3><div class="event-badges"><span>Saturday, Oct. 31</span><span>$25 / person</span><span>Food &amp; drinks included</span><span>3 hours before kickoff</span></div>
       <img src="assets/tailgate-brotherhood-2026.webp" alt="Tau Chapter brothers gathered outdoors beneath a blue Phi Beta Sigma tent" width="1536" height="601" loading="lazy" class="mt-4 rounded-xl" style="display:block;width:100%;height:auto" />
       <p class="mt-3 font-semibold">Louisville vs. Stanford</p>
       <p id="kickoffTime" class="mt-2">Kickoff: TBD</p>
       <p id="tailgateTime" class="font-semibold mt-2">Tailgate starts three hours before kickoff • Time TBD</p>
       <p class="text-sm text-slate-600 mt-2">Tailgate admission: $25 per person • Food and drinks included. Location coming soon. Register below to help us plan. Football game tickets are separate.</p>
-      <a href="https://gocards.com/sports/football/schedule" target="_blank" rel="noopener" class="underline text-[var(--pbs-royal)]">Official football schedule</a>
+      <a href="https://gocards.com/sports/football/schedule" target="_blank" rel="noopener" class="underline text-[var(--pbs-royal)]">Official football schedule</a><a href="#register" class="tailgate-cta">Count me in ↗</a>
     </article>
-    <div class="mt-6 grid md:grid-cols-2 gap-6">
+    <h3 class="friday-title">Friday night, together.</h3><div class="friday-events mt-6 grid md:grid-cols-2 gap-6">
       <article class="card bg-white p-6 ring-1 ring-[var(--sigma-gray)]">
         <p class="font-semibold text-[var(--pbs-royal)]">FRIDAY, OCTOBER 30</p>
         <h3 class="text-xl font-bold mt-2">Cardinal Reunion</h3>
@@ -140,8 +154,27 @@
       <h2 class="text-2xl sm:text-3xl font-extrabold">Registered Attendees</h2>
       <button id="refreshBtn" class="px-4 py-2 rounded-xl border bg-white shadow text-sm">Refresh</button>
     </div>
-    <p id="headcount" class="mt-4 font-semibold" aria-live="polite">Loading headcount…</p>
+    <p id="headcount" class="mt-4 font-semibold" aria-live="polite"><span class="headcount-number">7</span> attending <span class="headcount-detail">· 4 registrations + 3 guests</span><span class="sample-note">Illustrative preview count</span></p>
     <div id="rosterWrap" class="mt-6 grid md:grid-cols-2 gap-6"></div>
+  </section>
+
+  <!-- 100 Years of Tau -->
+  <section id="timeline" class="max-w-6xl mx-auto px-4 py-12">
+    <h2 class="text-2xl sm:text-3xl font-extrabold">Tau Chapter • Since 1925</h2>
+    <div class="mt-6 grid md:grid-cols-3 gap-6">
+      <figure class="card bg-white rounded-2xl p-6 ring-1 ring-[var(--sigma-gray)]">
+        <img src="assets/tau100-1.jpg" loading="lazy" alt="Brotherhood" class="rounded-xl w-full h-48 object-cover" width="640" height="384" />
+        <figcaption class="mt-3 text-sm text-slate-700"><strong>Brotherhood</strong> — A bond unlike any other.</figcaption>
+      </figure>
+      <figure class="card bg-white rounded-2xl p-6 ring-1 ring-[var(--sigma-gray)]">
+        <img src="assets/tau100-3.jpg" loading="lazy" alt="Scholarship" class="rounded-xl w-full h-48 object-cover" width="640" height="384" />
+        <figcaption class="mt-3 text-sm text-slate-700"><strong>Scholarship</strong> — A century of academic success.</figcaption>
+      </figure>
+      <figure class="card bg-white rounded-2xl p-6 ring-1 ring-[var(--sigma-gray)]">
+        <img src="assets/charter members.jpg" loading="lazy" alt="Service" class="rounded-xl w-full h-48 object-cover" width="640" height="384" />
+        <figcaption class="mt-3 text-sm text-slate-700"><strong>Service</strong> — Committed to servicing Louisville since 1925.</figcaption>
+      </figure>
+    </div>
   </section>
 
   <!-- Footer micro-nav + Donate + QR + Admin -->
@@ -169,18 +202,6 @@
         </div>
       </div>
 
-      <details class="mt-6">
-        <summary class="cursor-pointer font-semibold">Admin</summary>
-        <div class="mt-3 flex flex-wrap items-center gap-3">
-          <input id="adminKey" type="password" placeholder="Passcode" class="rounded border px-3 py-2" />
-          <button id="csvBtn" class="px-3 py-2 rounded border bg-white">Download CSV</button>
-          <button id="totalsBtn" class="px-3 py-2 rounded border bg-white">Totals</button>
-
-        </div>
-
-        <pre id="totalsOut" class="mt-3 text-xs text-slate-600"></pre>
-      </details>
-
       <div class="mt-6 text-slate-500">© 2026 Tau Chapter Homecoming 2026</div>
     </div>
   </footer>
@@ -200,7 +221,12 @@
     })();
 
   </script>
-  <script src="assets/js/tailgate-registration.js"></script>
-  <script src="assets/js/homecoming-time.js"></script>
+  <script>
+    const guestsInput=document.getElementById('regGuests');
+    guestsInput.addEventListener('input',()=>{const n=Number(guestsInput.value);document.getElementById('registrationSummary').textContent=Number.isInteger(n)&&n>=0?`${n+1} ${n?'people':'person'} • Total: $${25*(n+1)}`:'Enter a valid guest count.';});
+    document.getElementById('regForm').addEventListener('submit',e=>{e.preventDefault();document.getElementById('formMsg').textContent='Design preview only — no registration has been saved.';});
+    document.getElementById('registerAnother').addEventListener('click',()=>{document.getElementById('regForm').reset();guestsInput.dispatchEvent(new Event('input'));});
+  </script>
+  
 </body>
 </html>
