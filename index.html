@@ -206,21 +206,7 @@
     </div>
   </footer>
 
-  <script>
-    // Dark mode toggle with persistence
-    const darkToggle=document.getElementById('darkToggle');
-    if(localStorage.getItem('tau.dark')==='1'){ document.body.classList.add('dark'); }
-    darkToggle?.addEventListener('click',()=>{
-      document.body.classList.toggle('dark');
-      localStorage.setItem('tau.dark', document.body.classList.contains('dark') ? '1' : '0');
-    });
 
-    // Marquee
-    (function(){ const phrases=["Brotherhood","Scholarship","Service"]; let i=0;
-      setInterval(()=>{ i=(i+1)%phrases.length; document.getElementById('marquee').textContent=phrases[i]; }, 2500);
-    })();
-
-  </script>
   <script>
     const guestsInput=document.getElementById('regGuests');
     guestsInput.addEventListener('input',()=>{const n=Number(guestsInput.value);document.getElementById('registrationSummary').textContent=Number.isInteger(n)&&n>=0?`${n+1} ${n?'people':'person'} • Total: $${25*(n+1)}`:'Enter a valid guest count.';});
