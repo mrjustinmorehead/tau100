@@ -22,8 +22,8 @@ if (process.env.TAU_SITE_ID && process.env.TAU_BLOBS_TOKEN) {
 const storeFor = (name) => client ? client.getStore(name) : getStore(name);
 
 export const stores = {
-  pending:     () => storeFor("pending"),
-  registrants: () => storeFor("registrants"),
+  pending:     () => storeFor("pending-2026"),
+  registrants: () => storeFor("registrants-2026"),
 };
 
 export const blobsMode = () => mode;

@@ -62,8 +62,8 @@ const wrapStore = (raw) => {
 const storeFor = (name) => wrapStore(baseStoreFor(name));
 
 const stores = {
-  pending:     () => storeFor("pending"),
-  registrants: () => storeFor("registrants"),
+  pending:     () => storeFor("pending-2026"),
+  registrants: () => storeFor("registrants-2026"),
 };
 
 const blobsMode = () => (useExplicit ? "getStore+opts" : "auto");
