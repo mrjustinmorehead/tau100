@@ -83,7 +83,7 @@
       <p class="mt-3 font-semibold">Louisville vs. Stanford</p>
       <p id="kickoffTime" class="mt-2">Kickoff: TBD</p>
       <p id="tailgateTime" class="font-semibold mt-2">Tailgate starts three hours before kickoff • Time TBD</p>
-      <p class="text-sm text-slate-600 mt-2">Location and registration details coming soon. Football game tickets are separate.</p>
+      <p class="text-sm text-slate-600 mt-2">Tailgate admission: $25 per person. Location and registration details coming soon. Football game tickets are separate.</p>
       <a href="https://gocards.com/sports/football/schedule" target="_blank" rel="noopener" class="underline text-[var(--pbs-royal)]">Official football schedule</a>
     </article>
     <div class="mt-6 grid md:grid-cols-2 gap-6">
@@ -110,9 +110,9 @@
   <section id="register" class="max-w-6xl mx-auto px-4 py-12">
     <div class="bg-white rounded-2xl p-6 ring-1 ring-[var(--sigma-gray)] card">
       <h2 class="text-2xl sm:text-3xl font-extrabold">Register</h2>
-      <p class="text-slate-600 mt-2">Tailgate pricing will be announced soon. Venmo remains the preferred payment option.</p>
+      <p class="text-slate-600 mt-2">Tailgate admission is $25 per person. Venmo remains the preferred payment option.</p>
 
-      <p class="mt-4 font-semibold">Tailgate registration opens when 2026 pricing is announced.</p>
+      <p class="mt-4 font-semibold">Tailgate registration will open soon.</p>
       <fieldset disabled hidden>
       <input type="radio" name="tier" value="25|Tailgate" checked>
       <form id="regForm" class="mt-6 grid md:grid-cols-2 gap-6">
@@ -147,7 +147,7 @@
         </label>
 
         <!-- Dynamic selection summary -->
-        <p id="tierSummary" class="md:col-span-2 text-sm text-slate-700">Selected: <strong>$100 – Homecoming Sponsorship</strong></p>
+        <p id="tierSummary" class="md:col-span-2 text-sm text-slate-700">Selected: <strong>$25 – Tailgate</strong></p>
 
         <div class="md:col-span-2 flex items-center justify-between gap-4">
           <div class="text-sm text-slate-600">Remaining proceeds support current undergraduate brothers.</div>
@@ -161,7 +161,7 @@
 <div id="confirmPanel" class="hidden mt-6 rounded-xl border p-4 bg-slate-50">
   <h3 class="font-bold">Choose a payment option, then confirm</h3>
   <p class="text-sm mt-2">
-    Please send <span id="payAmount" class="font-semibold">$100</span> via one of the options below,
+    Please send <span id="payAmount" class="font-semibold">$25</span> via one of the options below,
     then click <em>Confirm Payment</em>.
   </p>
   <ul class="mt-2 list-disc list-inside text-sm space-y-1">
@@ -268,7 +268,7 @@
     })();
 
     // Tier summary + amount binding
-    function currentTier(){ const c=document.querySelector('input[name="tier"]:checked'); if(!c) return {amount:100,name:"Homecoming Sponsorship"}; const [a,n]=c.value.split('|'); return {amount:Number(a), name:n}; }
+    function currentTier(){ const c=document.querySelector('input[name="tier"]:checked'); if(!c) return {amount:25,name:"Tailgate"}; const [a,n]=c.value.split('|'); return {amount:Number(a), name:n}; }
     function updateSummary(){ const t=currentTier(); document.getElementById('tierSummary').innerHTML='Selected: <strong>$'+t.amount+' – '+t.name+'</strong>'; }
     document.querySelectorAll('input[name="tier"]').forEach(r=>r.addEventListener('change',updateSummary)); updateSummary();
 
