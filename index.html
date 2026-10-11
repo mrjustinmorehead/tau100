@@ -121,11 +121,15 @@
         <button type="submit" id="submitBtn" class="px-5 py-3 bg-[var(--pbs-royal)] text-white rounded-xl font-semibold">Register</button>
         <p id="formMsg" class="md:col-span-2 text-sm" role="status"></p>
       </form>
+      <div id="manageActions" class="hidden mt-4 flex flex-wrap gap-3"><button id="cancelRegistration" type="button" class="rounded-lg border px-3 py-2">Cancel registration</button><button id="restoreRegistration" type="button" class="hidden rounded-lg border px-3 py-2">Restore registration</button></div>
+      <div id="cancelQuestion" class="hidden mt-3 rounded-xl border p-4"><p>Cancel your registration and remove you and your guests from the headcount? This does not refund any payment.</p><button id="confirmCancel" type="button" class="mt-3 rounded-lg border px-3 py-2">Yes, cancel registration</button><button id="keepRegistration" type="button" class="ml-2 rounded-lg border px-3 py-2">Keep registration</button></div>
+      <p class="mt-4 text-sm"><button id="registerAnother" type="button" class="underline">Register another person</button></p>
       <div id="paymentPanel" class="hidden mt-6 rounded-xl border p-4 bg-slate-50">
         <h3 class="font-bold">You’re registered!</h3><p id="savedSummary" class="mt-2"></p>
-        <p class="mt-2">Please send <strong id="payAmount">$25</strong>. Include your name and <span id="paymentCode"></span> in the payment note.</p>
+        <p id="paymentInstructions" class="mt-2">Please send <strong id="payAmount">$25</strong>. Include your name and <span id="paymentCode"></span> in the payment note.</p>
         <div class="mt-4 flex flex-wrap gap-3"><a id="payVenmo" class="underline" target="_blank" rel="noopener">Venmo (preferred)</a><a id="payCashApp" class="underline" target="_blank" rel="noopener">Cash App</a><a id="payPayPal" class="underline" target="_blank" rel="noopener">PayPal</a></div>
-        <p class="mt-3 text-sm text-slate-600">Your headcount is saved. No additional confirmation step is needed.</p>
+        <p class="mt-3 text-sm text-slate-600">Your headcount is saved. No additional confirmation step is needed. If you change your guest count after paying, adjust your payment as needed.</p>
+        <div class="mt-4"><label for="manageLink" class="block text-sm font-semibold">Your private registration link</label><input id="manageLink" readonly class="mt-1 w-full rounded-lg border p-2 text-sm" /><button id="copyManageLink" type="button" class="mt-2 rounded-lg border px-3 py-2 text-sm">Copy private link</button><p class="mt-2 text-sm text-slate-600">Save this link to update or cancel from another device. Anyone with the link can manage your registration.</p></div>
       </div>
     </div>
   </section>
