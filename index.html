@@ -123,10 +123,9 @@
   <section id="register" class="max-w-6xl mx-auto px-4 py-12">
     <div class="bg-white rounded-2xl p-6 ring-1 ring-[var(--sigma-gray)] card">
       <h2 class="text-2xl sm:text-3xl font-extrabold">Register for the Tailgate</h2>
-      <p class="text-slate-600 mt-2">$25 per person, including guests. Food and drinks included. Register now to help us plan the headcount, then send your payment. No payment confirmation required.</p>
+      <p class="text-slate-600 mt-2">$25 per person, including guests. Everyone is welcome—brothers, family, and friends. Food and drinks included. Register now to help us plan the headcount, then send your payment. No payment confirmation required.</p>
       <form id="regForm" class="mt-6 grid md:grid-cols-2 gap-6">
         <div><label for="regName" class="block text-sm font-medium">Full name</label><input id="regName" name="name" required maxlength="120" autocomplete="name" class="mt-1 w-full rounded-xl border p-3" /></div>
-        <div><label for="regYear" class="block text-sm font-medium">Year crossed</label><input id="regYear" name="yearJoined" type="number" required min="1900" max="2026" step="1" class="mt-1 w-full rounded-xl border p-3" /></div>
         <div><label for="regGuests" class="block text-sm font-medium">Number of guests</label><input id="regGuests" name="guestCount" type="number" required min="0" max="1000" step="1" value="0" class="mt-1 w-full rounded-xl border p-3" /><p class="mt-1 text-sm text-slate-600">Guests in addition to you. Guest names aren’t needed.</p></div>
         <div class="hidden" aria-hidden="true"><input name="website" tabindex="-1" autocomplete="off" /></div>
         <label class="flex items-center gap-2 md:col-span-2 text-sm"><input type="checkbox" name="optInPublic" checked /> Show my name and guest count on the attendee list.</label>
@@ -150,11 +149,11 @@
   <!-- ROSTER -->
   <section id="roster" class="max-w-6xl mx-auto px-4 py-12">
     <div class="flex items-center justify-between">
-      <h2 class="text-2xl sm:text-3xl font-extrabold">Registered Attendees</h2>
+      <h2 class="text-2xl sm:text-3xl font-extrabold">Who’s Coming</h2>
       <button id="refreshBtn" class="px-4 py-2 rounded-xl border bg-white shadow text-sm">Refresh</button>
     </div>
     <p id="headcount" class="mt-4 font-semibold" aria-live="polite">Loading headcount…</p>
-    <div id="rosterWrap" class="mt-6 grid md:grid-cols-2 gap-6"></div>
+    <div id="rosterWrap" class="mt-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-4" role="list" aria-label="Public attendee list"></div>
   </section>
 
   <!-- 100 Years of Tau -->

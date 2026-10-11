@@ -17,7 +17,6 @@
   function showRegistration(r) {
     saved = true; cancelled = !!r.cancelledAt;
     document.getElementById('regName').value = r.name;
-    document.getElementById('regYear').value = r.yearJoined;
     guestInput.value = r.guestCount || 0;
     form.elements.optInPublic.checked = r.optInPublic !== false;
     form.querySelectorAll('input').forEach(el=>el.disabled=cancelled);
@@ -78,20 +77,22 @@
     try {
       const res = await fetch(endpoint,{cache:'no-store'}); const data = await res.json(); if (!res.ok) throw new Error();
       totals = data.totals; count.textContent = `${totals.attendees} expected attendees • ${totals.registrations} registrations + ${totals.guests} guests`;
-      wrap.replaceChildren(); const groups = new Map();
-      data.registrants.sort((a,b)=>a.yearJoined-b.yearJoined || a.name.localeCompare(b.name)).forEach(r=>{const decade = Math.floor(r.yearJoined/10)*10; if(!groups.has(decade)) groups.set(decade,[]); groups.get(decade).push(r);});
-      for (const [decade, rows] of [...groups].sort((a,b)=>b[0]-a[0])) {
-        const box = document.createElement('div'); box.className = 'card bg-white rounded-2xl p-6'; const title = document.createElement('h3'); title.className = 'text-xl font-bold'; title.textContent = `${decade}s`; box.append(title);
-        const list = document.createElement('ul'); for(const r of rows){const li=document.createElement('li');li.className='py-2';li.textContent=`${label(r.name,r.guestCount)} (${r.yearJoined})`;list.append(li);} box.append(list);wrap.append(box);
-      }
-      if(!groups.size) wrap.textContent = 'No public registrations yet.';
+      wrap.replaceChildren();
+      data.registrants.sort((a,b)=>a.name.localeCompare(b.name,undefined,{sensitivity:'base'})).forEach(r=>{
+        const card=document.createElement('div');card.className='card bg-white p-5 flex items-center gap-3';card.setAttribute('role','listitem');
+        const avatar=document.createElement('span');avatar.className='shrink-0 w-11 h-11 rounded-full bg-[var(--pbs-royal)] text-white flex items-center justify-center font-bold';avatar.setAttribute('aria-hidden','true');avatar.textContent=r.name.trim().split(/\s+/).filter(Boolean).slice(0,2).map(n=>Array.from(n)[0]).join('').toUpperCase();
+        const info=document.createElement('div');info.className='min-w-0';const name=document.createElement('p');name.className='font-semibold break-words';name.textContent=r.name;info.append(name);
+        if(r.guestCount){const badge=document.createElement('span');badge.className='inline-block mt-2 rounded-full border border-[var(--sigma-gray)] px-2 py-1 text-xs text-[var(--pbs-royal)] font-semibold';badge.textContent=`+${r.guestCount} ${r.guestCount===1?'guest':'guests'}`;info.append(badge);}
+        card.append(avatar,info);wrap.append(card);
+      });
+      if(!data.registrants.length) wrap.textContent = 'No public registrations yet.';
     } catch { count.textContent='Headcount temporarily unavailable.'; wrap.textContent='Unable to load attendees. Please refresh.'; }
   }
   document.getElementById('refreshBtn').addEventListener('click',loadRoster); loadRoster();
   form.addEventListener('submit',async e=>{
     e.preventDefault(); if(busy || cancelled)return; busy=true;submit.disabled=true;msg.textContent='Saving…';
     try{
-      const fd=new FormData(form);const body={name:fd.get('name'),yearJoined:Number(fd.get('yearJoined')),guestCount:Number(fd.get('guestCount')),optInPublic:fd.get('optInPublic')==='on',website:fd.get('website'),requestId,action:'update'};
+      const fd=new FormData(form);const body={name:fd.get('name'),guestCount:Number(fd.get('guestCount')),optInPublic:fd.get('optInPublic')==='on',website:fd.get('website'),requestId,action:'update'};
       const res=await fetch(endpoint,{method:saved?'PATCH':'POST',headers:saved?ownHeaders():{'Content-Type':'application/json'},body:JSON.stringify(body)});
       const data=await res.json();if(!res.ok)throw new Error(data.error||'Unable to save registration.');
       showRegistration(data.registration);remember();msg.textContent='Registration saved. Your headcount is included!';await loadRoster();
