@@ -27,15 +27,16 @@
     document.getElementById('restoreRegistration').classList.toggle('hidden',!cancelled);
     document.getElementById('cancelQuestion').classList.add('hidden');
     document.getElementById('savedSummary').textContent = cancelled ? `${label(r.name,r.guestCount)} • Cancelled • Removed from headcount` : `${label(r.name,r.guestCount)} • ${r.attendeeCount} ${r.attendeeCount===1?'person':'people'} • Total: $${r.packageAmount}`;
-    document.querySelector('#paymentPanel h3').textContent = cancelled ? 'Registration cancelled' : 'You’re registered!';
+    document.querySelector('#paymentPanel h3').textContent = cancelled ? 'Registration cancelled' : '2. Pay for the Tailgate';
     document.getElementById('payAmount').textContent=`$${r.packageAmount}`;
-    document.getElementById('paymentCode').textContent=r.paymentCode;
+    document.getElementById('paymentCode').textContent=`and ${r.paymentCode}`;
     const note=`Tau2026 ${r.name} ${r.paymentCode}`;
     document.getElementById('payVenmo').href='https://venmo.com/morehead?'+new URLSearchParams({txn:'pay',amount:r.packageAmount,note});
     document.getElementById('payCashApp').href='https://cash.app/$Morehead?'+new URLSearchParams({amount:r.packageAmount,note});
     document.getElementById('payPayPal').href=`https://paypal.me/morehead/${r.packageAmount}?`+new URLSearchParams({note});
     document.getElementById('manageLink').value=manageUrl();
     paymentLinks.classList.remove('hidden');
+    document.getElementById('privateLinkPanel').classList.remove('hidden');
     paymentLinks.querySelectorAll('a').forEach(el=>el.classList.toggle('hidden',cancelled));
     document.getElementById('paymentInstructions').classList.toggle('hidden',cancelled);
   }
@@ -62,7 +63,7 @@
   document.getElementById('restoreRegistration').addEventListener('click',()=>changeStatus('restore'));
   document.getElementById('registerAnother').addEventListener('click',()=>{
     if(busy)return;requestId=crypto.randomUUID();remember();history.replaceState(null,'','#register');saved=false;cancelled=false;
-    form.reset();form.querySelectorAll('input').forEach(el=>el.disabled=false);submit.textContent='Register';submit.disabled=false;msg.textContent='New registration for another person.';paymentLinks.classList.add('hidden');document.getElementById('manageActions').classList.add('hidden');document.getElementById('cancelQuestion').classList.add('hidden');summary();
+    form.reset();form.querySelectorAll('input').forEach(el=>el.disabled=false);submit.textContent='Register';submit.disabled=false;msg.textContent='New registration for another person.';document.getElementById('privateLinkPanel').classList.add('hidden');document.getElementById('manageActions').classList.add('hidden');document.getElementById('cancelQuestion').classList.add('hidden');summary();
   });
   if(linkedId) document.getElementById('register').scrollIntoView();
   readSaved();
@@ -95,7 +96,7 @@
       const fd=new FormData(form);const body={name:fd.get('name'),guestCount:Number(fd.get('guestCount')),optInPublic:fd.get('optInPublic')==='on',website:fd.get('website'),requestId,action:'update'};
       const res=await fetch(endpoint,{method:saved?'PATCH':'POST',headers:saved?ownHeaders():{'Content-Type':'application/json'},body:JSON.stringify(body)});
       const data=await res.json();if(!res.ok)throw new Error(data.error||'Unable to save registration.');
-      showRegistration(data.registration);remember();msg.textContent='Registration saved. Your headcount is included!';await loadRoster();
+      showRegistration(data.registration);remember();msg.textContent='Registration saved. Next: use the payment buttons below. Already paid? Do not pay again.';paymentLinks.scrollIntoView({behavior:'smooth',block:'start'});paymentLinks.focus({preventScroll:true});await loadRoster();
     }catch(err){msg.textContent=err.message||'Unable to save. Please try again.';submit.disabled=false;}
     finally{busy=false;}
   });
