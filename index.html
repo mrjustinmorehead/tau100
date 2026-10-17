@@ -61,6 +61,16 @@
     #timeline h2 {font-size:24px;} #timeline .card {padding:18px;}
     a:focus-visible,button:focus-visible,input:focus-visible {outline:3px solid #6ca3ee;outline-offset:3px;}
     @media(max-width:640px) {.hero-inner{padding:22px 20px;} .hero-top{margin-bottom:36px}.hero-bottom{gap:14px;flex-wrap:wrap}.hero-bottom .since{margin-left:0}.hero-actions{gap:15px;margin-bottom:30px}.tailgate-card{padding:18px!important}.tailgate-cta{margin-left:0;display:block;text-align:center}.homecoming-hero:after{right:-70px;font-size:380px}body{padding-bottom:80px}.friday-title{margin-top:26px}}
+  
+    .hero-facts{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0 12px}.hero-facts span{background:#fff;color:#164f90;border-radius:999px;padding:9px 12px;font-size:13px;font-weight:bold}
+    .weekend-button{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:11px 15px;border:1px solid #c8c9c7;border-radius:9px;background:white;color:#164f90;font:700 13px Arial;text-decoration:none}
+    .hero-actions .weekend-button{background:transparent;color:white;border-color:white}
+    .friday-events img{width:100%!important;height:170px!important;object-fit:contain;max-width:none!important;margin:16px 0 0!important}
+    .friday-events img[src*="cardinal-reunion"]{background:#ac1d23}
+    .friday-events img[src*="stepshow"]{background:#111}
+    .friday-events details{margin:14px 0}.friday-events summary{cursor:pointer;color:#164f90;font-weight:700;min-height:36px}
+    .friday-events details a{margin-top:0}.friday-events .event-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:auto;padding-top:16px}.friday-events .event-actions a{margin:0;padding:11px 15px}
+    #shareStatus{font-size:13px;margin-top:10px}
   </style>
 </head>
 <body class="bg-slate-50 text-slate-900">
@@ -79,8 +89,12 @@
       <div class="hero-top"><span class="brand" aria-label="Phi Beta Sigma Fraternity, Inc., Tau Chapter, Louisville, Kentucky">ΦΒΣ <span>PHI BETA SIGMA FRATERNITY, INC.<br>TAU CHAPTER · LOUISVILLE, KENTUCKY</span></span><a href="#schedule">Weekend schedule ↗</a></div>
       <p class="hero-kicker">LOUISVILLE · OCTOBER 30–31</p>
       <h1>Come home<br>to <em>Tau.</em></h1>
-      <p class="hero-sub">Homecoming 2026. Same bond. New memories.</p>
+      <div class="hero-facts"><span>Saturday, Oct. 31</span><span>Boy Scout lot</span><span>$25 per person</span><span>Food &amp; drinks included</span></div>
+      <p>112 Central Avenue, Louisville · Everyone welcome</p>
+      <p class="mt-2">Tailgate starts 3 hours before kickoff · Time TBD</p>
       <div class="hero-actions"><a class="hero-cta" href="#register">Register for the Tailgate <span>↗</span></a><a href="#paymentPanel" class="hero-note underline font-bold">Already registered? Pay for the Tailgate ↗</a></div>
+      <div class="hero-actions" style="margin-top:-22px"><button type="button" class="weekend-button" data-calendar="tailgate">Add tailgate to calendar</button><button type="button" class="weekend-button" id="shareWeekend">Share the weekend ↗</button></div>
+      <div id="shareFallback" hidden class="mb-5"><label for="shareUrl">Share this link</label><div class="flex flex-wrap gap-2 mt-2"><input id="shareUrl" readonly value="https://tauhomecoming.com/" class="rounded-lg p-3 text-slate-900 max-w-full" /><button id="copyWeekend" type="button" class="weekend-button">Copy link</button></div></div><p id="shareStatus" role="status" aria-live="polite"></p>
       <div class="hero-bottom"><span>Brotherhood.</span><span>Scholarship.</span><span>Service.</span><span class="since">Since 1925</span></div>
     </div>
   </header>
@@ -113,12 +127,13 @@
         <p class="font-semibold mt-3">5:00–9:00 PM • Free • Registration required</p>
         <p class="mt-3">Join the Black Alumni Association social as part of the Red &amp; Black Alumni Summit. Reconnect with fellow Cardinals at this signature Homecoming event, founded by Sheri Riley ’90.</p>
         <p class="mt-3">The Biscuit Lounge<br>120 S. 10th St., Louisville, KY 40202</p>
-        <div class="mt-4 mb-4">
+        <details><summary>Map &amp; directions</summary><div class="mt-4 mb-4">
           <iframe title="Map of The Biscuit Lounge, 120 South 10th Street, Louisville, Kentucky" src="https://maps.google.com/maps?q=120%20S%2010th%20St%2C%20Louisville%2C%20KY%2040202&amp;output=embed" width="100%" height="240" style="border:0;border-radius:12px" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
           <a href="https://www.google.com/maps/dir/?api=1&amp;destination=120%20S%2010th%20St%2C%20Louisville%2C%20KY%2040202" target="_blank" rel="noopener" class="inline-block underline text-[var(--pbs-royal)] font-semibold">Get directions to The Biscuit Lounge ↗</a>
-        </div>
-        <a href="https://pae.louisville.edu/e/2026-red-black-alumni-summit" target="_blank" rel="noopener" class="inline-block mt-4 px-4 py-3 rounded-xl bg-[var(--pbs-royal)] text-white font-semibold">Register for Cardinal Reunion</a>
-      </article>
+        </div></details>
+        <div class="event-actions"><a href="https://pae.louisville.edu/e/2026-red-black-alumni-summit" target="_blank" rel="noopener" class="inline-block mt-4 px-4 py-3 rounded-xl bg-[var(--pbs-royal)] text-white font-semibold">Register for Cardinal Reunion</a>
+      <button type="button" class="weekend-button" data-calendar="reunion">Add to calendar</button></div>
+</article>
       <article class="card bg-white p-6 ring-1 ring-[var(--sigma-gray)]">
         <p class="font-semibold text-[var(--pbs-royal)]">FRIDAY, OCTOBER 30</p>
         <h3 class="text-xl font-bold mt-2">UofL NPHC Step Show</h3>
@@ -235,5 +250,27 @@
   <script src="assets/js/tailgate-registration.js"></script>
   <script src="assets/js/homecoming-time.js"></script>
   
+
+  <script>
+  (() => {
+    const calendarEvents={
+      tailgate:{uid:'tau-tailgate-2026@tauhomecoming.com',title:'Tau Homecoming Tailgate — time TBD',location:'Boy Scout lot, 112 Central Avenue, Louisville, KY',start:'DTSTART;VALUE=DATE:20261031',end:'DTEND;VALUE=DATE:20261101',description:'Time TBD. Tailgate begins 3 hours before kickoff. $25 per person; food and drinks included. Everyone welcome. Check https://tauhomecoming.com/ for confirmed timing. This all-day entry is a placeholder, not an all-day event.'},
+      reunion:{uid:'cardinal-reunion-2026@tauhomecoming.com',title:'Cardinal Reunion',location:'The Biscuit Lounge, 120 S. 10th St., Louisville, KY 40202',start:'DTSTART:20261030T210000Z',end:'DTEND:20261031T010000Z',description:'5–9 PM Eastern. Free registration required: https://pae.louisville.edu/e/2026-red-black-alumni-summit'}
+    };
+    const escapeICS=value=>value.replace(/\\/g,'\\\\').replace(/\r?\n/g,'\\n').replace(/,/g,'\\,').replace(/;/g,'\\;');
+    document.querySelectorAll('[data-calendar]').forEach(button=>button.addEventListener('click',()=>{
+      const key=button.dataset.calendar,event=calendarEvents[key];
+      const lines=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Tau Chapter//Homecoming 2026//EN','CALSCALE:GREGORIAN','BEGIN:VEVENT','UID:'+event.uid,'DTSTAMP:'+new Date().toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,''),event.start,event.end,'SUMMARY:'+escapeICS(event.title),'LOCATION:'+escapeICS(event.location),'DESCRIPTION:'+escapeICS(event.description),'URL:https://tauhomecoming.com/','END:VEVENT','END:VCALENDAR'];
+      const url=URL.createObjectURL(new Blob([lines.join('\r\n')+'\r\n'],{type:'text/calendar;charset=utf-8'})),link=document.createElement('a');link.href=url;link.download=key+'-2026.ics';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+    }));
+    const status=document.getElementById('shareStatus'),fallback=document.getElementById('shareFallback');
+    document.getElementById('shareWeekend').addEventListener('click',async()=>{
+      const data={title:'Tau Chapter Homecoming 2026',text:'Join us October 30–31 in Louisville. Tailgate: October 31, Boy Scout lot, $25 per person with food and drinks included.',url:'https://tauhomecoming.com/'};
+      if(navigator.share){try{await navigator.share(data);return;}catch(error){if(error.name==='AbortError')return;}}
+      fallback.hidden=false;status.textContent='Copy the link to share by text or your favorite app.';
+    });
+    document.getElementById('copyWeekend').addEventListener('click',async()=>{try{await navigator.clipboard.writeText('https://tauhomecoming.com/');status.textContent='Link copied.';}catch{document.getElementById('shareUrl').select();status.textContent='Select and copy the link above.';}});
+  })();
+  </script>
 </body>
 </html>
