@@ -92,7 +92,7 @@
       <h1>Come home<br>to <em>Tau.</em></h1>
       <div class="hero-facts"><span>Saturday, Oct. 31</span><span>Boy Scout lot</span><span>$25 per person</span><span>Food &amp; drinks included</span></div>
       <p>112 Central Avenue, Louisville · Everyone welcome</p>
-      <p class="mt-2">Tailgate starts 3 hours before kickoff · Time TBD</p>
+      <p class="mt-2">Tailgate starts at 12:15 PM Eastern · Kickoff at 3:15 PM Eastern</p>
       <div class="hero-actions"><a class="hero-cta" href="#register">Register for the Tailgate <span>↗</span></a><a href="#paymentPanel" class="hero-note underline font-bold">Already registered? Pay for the Tailgate ↗</a></div>
       <div class="hero-actions" style="margin-top:-22px"><button type="button" class="weekend-button" data-calendar="tailgate">Add tailgate to calendar</button><button type="button" class="weekend-button" id="shareWeekend">Share the weekend ↗</button></div>
       <div id="shareFallback" hidden class="mb-5"><label for="shareUrl">Share this link</label><div class="flex flex-wrap gap-2 mt-2"><input id="shareUrl" readonly value="https://tauhomecoming.com/" class="rounded-lg p-3 text-slate-900 max-w-full" /><button id="copyWeekend" type="button" class="weekend-button">Copy link</button></div></div><p id="shareStatus" role="status" aria-live="polite"></p>
@@ -109,8 +109,8 @@
       <h3 class="text-2xl font-bold mt-2">Tau Chapter Homecoming Tailgate</h3><div class="event-badges"><span>Saturday, Oct. 31</span><span>$25 / person</span><span>Food &amp; drinks included</span><span>3 hours before kickoff</span></div>
       <img src="assets/tailgate-brotherhood-2026.webp" alt="Tau Chapter brothers gathered outdoors beneath a blue Phi Beta Sigma tent" width="1536" height="601" loading="lazy" class="mt-4 rounded-xl" style="display:block;width:100%;height:auto" />
       <p class="mt-3 font-semibold">Louisville vs. Stanford</p>
-      <p id="kickoffTime" class="mt-2">Kickoff: TBD</p>
-      <p id="tailgateTime" class="font-semibold mt-2">Tailgate starts three hours before kickoff • Time TBD</p>
+      <p id="kickoffTime" class="mt-2">Kickoff: 3:15 PM Eastern</p>
+      <p id="tailgateTime" class="font-semibold mt-2">Tailgate starts: 12:15 PM Eastern • Three hours before kickoff</p>
       <p class="text-sm text-slate-600 mt-2">Tailgate admission: $25 per person • Food and drinks included. Register below to help us plan. Football game tickets are separate.</p>
       <div class="mt-5 rounded-xl border border-[var(--sigma-gray)] p-4">
         <h4 class="font-bold text-lg">Tailgate location: Boy Scout lot</h4>
@@ -261,13 +261,13 @@
 
 
   <script src="assets/js/tailgate-registration.js"></script>
-  <script src="assets/js/homecoming-time.js"></script>
+  <!-- Confirmed event times are published above and in the calendar download. -->
   
 
   <script>
   (() => {
     const calendarEvents={
-      tailgate:{uid:'tau-tailgate-2026@tauhomecoming.com',title:'Tau Homecoming Tailgate — time TBD',location:'Boy Scout lot, 112 Central Avenue, Louisville, KY',start:'DTSTART;VALUE=DATE:20261031',end:'DTEND;VALUE=DATE:20261101',description:'Time TBD. Tailgate begins 3 hours before kickoff. $25 per person; food and drinks included. Everyone welcome. Check https://tauhomecoming.com/ for confirmed timing. This all-day entry is a placeholder, not an all-day event.'},
+      tailgate:{uid:'tau-tailgate-2026@tauhomecoming.com',title:'Tau Homecoming Tailgate',location:'Boy Scout lot, 112 Central Avenue, Louisville, KY',start:'DTSTART:20261031T161500Z',end:'DTEND:20261031T191500Z',description:'Tailgate starts at 12:15 PM Eastern, three hours before the 3:15 PM Eastern kickoff. Calendar entry runs until kickoff. $25 per person; food and drinks included. Everyone welcome. https://tauhomecoming.com/'},
       reunion:{uid:'cardinal-reunion-2026@tauhomecoming.com',title:'Cardinal Reunion',location:'The Biscuit Lounge, 120 S. 10th St., Louisville, KY 40202',start:'DTSTART:20261030T210000Z',end:'DTEND:20261031T010000Z',description:'5–9 PM Eastern. Free registration required: https://pae.louisville.edu/e/2026-red-black-alumni-summit'}
     };
     const escapeICS=value=>value.replace(/\\/g,'\\\\').replace(/\r?\n/g,'\\n').replace(/,/g,'\\,').replace(/;/g,'\\;');
