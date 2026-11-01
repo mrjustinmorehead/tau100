@@ -14,7 +14,7 @@ export default async function handler(req){
     do{const page=await db.list(cursor?{cursor}:{});for(const {key} of page.blobs||[]){const r=await db.get(key,{type:'json'});if(r&&!r.removedAt)subscribers.push({id:key,name:r.name,email:r.email,signedUpAt:r.signedUpAt,consent:r.consent});}cursor=page.cursor;}while(cursor);
     subscribers.sort((a,b)=>b.signedUpAt.localeCompare(a.signedUpAt));
     if(url.searchParams.get('format')==='csv'){
-     const cell=v=>'"'+String(v??'').replace(/^[=+@-]/,"'").replaceAll('"','""')+'"';
+     const cell=v=>'"'+String(v??'').replace(/^[=+@-]/,"'$&").replaceAll('"','""')+'"';
      const rows=[['Name','Email','Signup date','Consent'],...subscribers.map(r=>[r.name,r.email,r.signedUpAt,r.consent])];
      return new Response(rows.map(row=>row.map(cell).join(',')).join('\r\n'),{headers:{'Content-Type':'text/csv; charset=utf-8','Content-Disposition':'attachment; filename="tau-homecoming-2027-email-list.csv"','Cache-Control':'no-store'}});
     }
