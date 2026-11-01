@@ -71,7 +71,7 @@
     .friday-events details{margin:14px 0}.friday-events summary{cursor:pointer;color:#164f90;font-weight:700;min-height:36px}
     .friday-events details a{margin-top:0}.friday-events .event-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:auto;padding-top:16px}.friday-events .event-actions a{margin:0;padding:11px 15px}
     #shareStatus{font-size:13px;margin-top:10px}
-  header,.mobile-bar,#schedule,#register,#roster,#timeline,#donate,footer nav,footer img,footer a[target]{display:none!important}footer{border:0}footer details{display:block}body:before{content:"2026 Homecoming administration";display:block;font-size:28px;font-weight:bold;color:#164f90;max-width:1124px;margin:40px auto 0;padding:0 16px}
+  header,.mobile-bar,#schedule,#register,#roster,#timeline,#donate,footer nav,footer img,footer a[target]{display:none!important}footer{border:0}footer details{display:block}body:before{content:"Tau Homecoming administration";display:block;font-size:28px;font-weight:bold;color:#164f90;max-width:1124px;margin:40px auto 0;padding:0 16px}
 </style>
   <!-- Production configuration refreshed: 2026-10-17 -->
 </head>
@@ -253,7 +253,7 @@
           <div id="adminRows" class="mt-4 grid gap-3"></div>
         </div>
         <p id="adminMsg" role="status" aria-live="polite" class="mt-3"></p>
-        <pre id="totalsOut" class="mt-3 text-xs text-slate-600"></pre>
+        <section class="mt-8 border-t pt-6"><h2 class="text-xl font-bold">2027 Email List</h2><p class="mt-2">Private signup list. Addresses are collected with consent and are not email-verified. No announcements are sent automatically.</p><div class="mt-3 flex flex-wrap gap-3"><button id="emailListLoad" type="button" class="rounded-lg bg-[var(--pbs-royal)] text-white px-4 py-3 font-semibold">View / refresh email list</button><button id="emailListCsv" type="button" class="rounded-lg border px-4 py-3">Download email list CSV</button></div><p id="emailListMessage" role="status" aria-live="polite" class="mt-3"></p><div id="emailListPanel" hidden><p id="emailListCount" class="font-bold mt-3"></p><div style="overflow-x:auto"><table style="width:100%;margin-top:12px;text-align:left;table-layout:fixed"><caption class="sr-only">Homecoming 2027 email subscribers</caption><thead><tr><th style="padding:12px">Name</th><th style="padding:12px">Email</th><th style="padding:12px">Signed up</th><th style="padding:12px">Action</th></tr></thead><tbody id="emailListRows"></tbody></table></div></div></section><pre id="totalsOut" class="mt-3 text-xs text-slate-600"></pre>
       </details>
 
       <div class="mt-6 text-slate-500">© 2026 Tau Chapter Homecoming 2026</div>
@@ -287,5 +287,5 @@
   })();
   </script>
   <script src="assets/js/admin-registrations.js"></script>
-</body>
+<script src="assets/js/homecoming-updates.js"></script></body>
 </html>
